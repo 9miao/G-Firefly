@@ -1,5 +1,6 @@
 ####G-Firefly简介+Firefly-Gevent重要迭代版本alpha 0.1.2介绍
 
+
 firefly-gevent 是firefly的gevent版本。相比现在的firefly版本使用的twisted，gevent更加的精简。<br/>
 
 gevent就是一个基于coroutine的python网络开发框架。协程是一种并发模型，但不同于thread和callback，它的所有task都是可以在一个线程里面执行，然后可以通过在一个task里面主动放弃执行来切换到另一个task执行，它的调度是程序级的，不像thread是系统级的调度。<br/>
@@ -14,3 +15,26 @@ Gevent最明显的特征就是它惊人的性能，尤其是当与传统线程�
 另外，和同样具有很好并发性能的事件驱动模型相比，用协程实现的微线程，在逻辑表达上非常友好和直白，无须在不知道什么时候会发生的event和一层套一层的callback中纠结和扭曲（正如Twisted其名）。对于写过多线程程序的程序员而言，协程带来的微线程模型几乎可以实现无痛提高并发性能。<br/>
 
 firefly-gevent结合了gevent的性能，封装了网络IO处理、数据库IO读写缓存、分布式进程间接口调用。这样使得游戏服务端的开发变得更加的轻松简单，开发者不必在面对这些的技术难题，专心致力于游戏玩法逻辑的开发。<br/>
+
+
+
+
+####Firefly-gevent Alpha 0.1.2 Release – an Important Version Update
+
+
+Firefly-gevent is firefly gevent version which is more of simplicity comparing to current Firefly twisted version.<br/>
+
+Based on coroutine, python-written gevent is a web development framework. Coroutine is a concurrency model, but unlike to thread and callback, all its tasks can be executed in a single thread, and are able to swap to another task for execution by initial aborting in a task. It has program-level schedule rather than thread’s system-level schedule.<br/>
+
+Amazing performance is Gevent’s most obvious feature, especially when you compare it to traditional thread solution. On this point, an almost common sense fact is that asynchronous I/O performance will be significantly superior to separate thread-based synchronous I/O when load is over a certain degree. In the meantime, Gevent provides seemingly much alike traditional port that was programmed based on thread model. However this port’s real identity is asynchronous I/O, and what’s more wonderful part is that it makes all these transparent (here it means you don't need to worry about how it function itself, Gevent will help you finish the switching job).<br/>
+
+Ignoring other factors, Gevent performance is four times greater than thread solution (here in this test we use Paste as contrast, note: Paste is another thread-based web library of Python). Comparing to single process multi thread model, multi process and coroutine is more scalable model. In high concurrency situation, multi process model compiled program is easier to Scale Out, and coroutine model could significantly improve single host concurrency performance to achieve Scale Up. So the standardized configuration of future server concurrency model probably is: each core contains a process which is actually a micro thread that realized by coroutine.<br/>
+
+Coding-wise, shared resources lock and unlock problem caused by multi thread model has been a nightmare to programmer since ever. But when you code with multi process model, its philosophy will inspire programmers write programs that has avoiding shared resources feature which will consequently improve system robustness. And currently all Python coroutine realization are non preemptive schedule, it enables programmers themselves to control multi program switch timing so as to avoid a majority of worrisome lock and unlock problems. All these are advantageous for programmers to write more established codes.<br/>
+
+In addition, comparing to event-driven model that also has great concurrency performance, coroutine realized micro thread has very friendly and straight forward logic expression and allows programmers to free from struggling and twisting in unpredictable event and multi-layer covered callback (what Twisted implicates…). Micro thread model of coroutine could help multi thread programs writer to almost realize a painless concurrency performance upgrade.<br/>
+
+Firefly-gevent, with gevent performance, encapsulates network IO processing, database IO read and write cache, interface calls among distributed processes, which 
+allows game server side development become more easy and simple, and developers focus on gameplay logic development with no burden on technical problems.<br/>
+
+
