@@ -1,4 +1,4 @@
-VERSION = (0, 1, 2, 'alpha', 0)
+VERSION = (0, 1, 5, 'alpha', 0)
 
 def get_version(*args, **kwargs):
     # Only import if it's actually called.

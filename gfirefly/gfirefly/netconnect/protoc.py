@@ -51,7 +51,7 @@ class LiberateProtocol(protocols.BaseProtocol):
             unpackdata = self.factory.dataprotocl.unpack(self.buff[:length])
             if not unpackdata.get('result'):
                 log.msg('illegal data package --')
-                self.transport.loseConnection()
+                self.factory.connmanager.loseConnection(self.transport.sessionno)
                 break
             command = unpackdata.get('command')
             rlength = unpackdata.get('length')

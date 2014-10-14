@@ -13,7 +13,7 @@ import subprocess
 def get_version(version=None):
     "Returns a PEP 386-compliant version number from VERSION."
     if version is None:
-        from gtwisted import VERSION as version
+        from gfirefly import VERSION as version
     else:
         assert len(version) == 5
         assert version[3] in ('alpha', 'beta', 'rc', 'final')

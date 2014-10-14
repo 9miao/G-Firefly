@@ -27,14 +27,14 @@ def serviceHandle(target):
 def printData1(data,data1):
     print data,data1
     print "############################"
-    d = root.callChildByName("test_node",1,u'Root测试')
+    d = root.callChild("test_node",1,u'Root测试')
     return data
 
 @serviceHandle
 def printData2(data,data1):
     print data,data1
     print "############################"
-    d = root.callChildByName("test_node",1,u'Root测试')
+    d = root.callChild("test_node",1,u'Root测试')
     return data
 
 if __name__=='__main__':

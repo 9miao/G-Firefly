@@ -11,7 +11,7 @@ from gtwisted.utils import log
 from gfirefly.utils import services
 from gfirefly.netconnect.protoc import LiberateFactory
 
-reactor = reactor
+# reactor = reactor
 service = services.CommandService("loginService")
 
 def serviceHandle(target):
@@ -32,16 +32,19 @@ def serverstart():
     '''
     log.startLogging(sys.stdout)
     factory.addServiceChannel(service)
-    reactor.callLater(10,factory.pushObject,111,'asdfe',[0])
-    reactor.callLater(15,factory.loseConnection,0)
+    reactor.callLater(10,factory.pushObject,111,'asdfe',[0,1])
+#     reactor.callLater(15,factory.loseConnection,0)
     reactor.listenTCP(1000,factory)
     reactor.run()
     
+a = 0
+    
 @serviceHandle
 def echo_1(_conn,data):
-    addr = _conn.transport.getAddress()
-    print addr
-    return "欢迎"
+    global a
+    a+=1
+    print a
+    return "0"
 
 if __name__ == "__main__":
     
