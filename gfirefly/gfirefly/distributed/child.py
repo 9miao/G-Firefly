@@ -7,10 +7,9 @@ Created on 2013-8-14
 class Child(object):
     '''子节点对象'''
     
-    def __init__(self,cid,name):
+    def __init__(self,name):
         '''初始化子节点对象
         '''
-        self._id = cid
         self._name = name
         self._transport = None
         

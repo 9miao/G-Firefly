@@ -60,7 +60,7 @@ class PBRoot:
         @param name: 根节点的名称
         '''
         log.msg('node [%s] takeProxy ready'%name)
-        child = Child(name,name)
+        child = Child(name)
         self.childsmanager.addChild(child)
         child.setTransport(transport)
         self.doChildConnect(name, transport)
@@ -93,11 +93,11 @@ class PBRoot:
         child = self.childsmanager.getChildBYSessionId(session_id)
         if not child:
             return
-        child_id = child._id
-        self.doChildLostConnect(child_id)
-        self.childsmanager.dropChildByID(child_id)
+        childname = child.getName()
+        self.doChildLostConnect(childname)
+        self.childsmanager.dropChildByID(childname)
         
-    def doChildLostConnect(self,childId):
+    def doChildLostConnect(self,childname):
         """当node节点连接时的处理
         """
         pass
@@ -109,10 +109,9 @@ class PBRoot:
         '''
         return self.childsmanager.callChild(key,*args,**kw)
     
-    def callChildByName(self,childname,*args,**kw):
+    def callChildNotForResult(self,childname,*args,**kw):
         '''调用子节点的接口
         @param childId: int 子节点的id
         return Defered Object
         '''
-        return self.childsmanager.callChildByName(childname,*args,**kw)
-    
+        self.childsmanager.callChildNotForResult(childname,*args,**kw)

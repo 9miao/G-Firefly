@@ -40,10 +40,11 @@ s1 = time.time()
 
 def start():
     while True:
-        time.sleep(1)
-        client.sendall(sendData('asdfe',1))
-        data = client.recv(1024)
-        print resolveRecvdata(data)
+#         time.sleep(1)
+        client.sendall(sendData('0',1))
+#         data = client.recv(1024)
+#         print data
+        #print resolveRecvdata(data)
 
 start()
 

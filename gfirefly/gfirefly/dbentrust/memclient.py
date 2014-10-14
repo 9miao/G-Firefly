@@ -46,7 +46,7 @@ class MemClient:
         test:name
         '''
         if isinstance(keyname, basestring):
-            return ''.join([self._hostname,':',keyname])
+            return str(''.join([self._hostname,':',keyname]))
         else:
             raise "type error"
         

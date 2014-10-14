@@ -24,8 +24,14 @@ class Command:
     def execute(self):
         '''
         '''
-        commmd = getattr(commands,self.subcommond )
-        commmd.execute(*self.args)
+        try:
+            commmd = getattr(commands,self.subcommond )
+            commmd.execute(*self.args)
+        except:
+            modes = dir(commands)
+            lines = ["\t"+m+"\n" for m in modes if not m.startswith("_")]
+            firstline = "args error\nargs:\n"
+            print "".join([firstline,]+lines)
         
         
 def execute_commands(*args):

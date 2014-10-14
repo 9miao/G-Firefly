@@ -12,6 +12,9 @@ from reference import ProxyReference
 
 class BilateralClientProtocol(rpc.PBClientProtocl):
     
+    def __init__(self, transport, factory):
+        rpc.PBClientProtocl.__init__(self, transport, factory)
+    
     def setProxyReference(self,pr):
         """设置代理接口提供对象
         """
@@ -23,9 +26,25 @@ class BilateralClientProtocol(rpc.PBClientProtocl):
         method = getattr(self.reference, "remote_%s"%_name)
         return method
     
+    def connectionLost(self, reason):
+        rpc.PBClientProtocl.connectionLost(self, reason)
+        self.factory
+        
+    
 class BilateralClientFactory(rpc.PBClientFactory):
     
     protocol = BilateralClientProtocol
+    
+    def __init__(self,ro=None):
+        self.ro = ro
+        rpc.PBClientFactory.__init__(self)
+    
+    def doconnectionLost(self):
+        """node节点端开后的处理
+        """
+        if self.ro:
+            self.ro.reconnect()
+        
     
     
 class RemoteObject(object):
@@ -37,7 +56,7 @@ class RemoteObject(object):
         @param rootaddr: 根节点服务器地址
         '''
         self._name = name
-        self._factory = BilateralClientFactory()
+        self._factory = BilateralClientFactory(self)
         self._reference = ProxyReference()
         self._addr = None
         self._timeout = timeout
