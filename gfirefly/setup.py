@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.1.5alpha'
+version = '0.1.6alpha'
 
 setup(name='gfirefly',
       version=version,

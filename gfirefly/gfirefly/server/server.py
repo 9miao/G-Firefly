@@ -103,6 +103,13 @@ class FFServer:
         GlobalObject().config(netfactory = self.netfactory, root=self.root,
                     remote = self.remote)
         
+        if app:
+            __import__(app)
+        if mreload:
+            _path_list = mreload.split(".")
+            GlobalObject().reloadmodule = __import__(mreload,fromlist=_path_list[:1])
+        GlobalObject().remote_connect = self.remote_connect
+        
         if masterconf:
             masterport = masterconf.get('rootport')
             masterhost = masterconf.get('roothost')
@@ -111,13 +118,6 @@ class FFServer:
             self.master_remote.connect(addr)
             GlobalObject().masterremote = self.master_remote
         import admin
-        
-        if app:
-            __import__(app)
-        if mreload:
-            _path_list = mreload.split(".")
-            GlobalObject().reloadmodule = __import__(mreload,fromlist=_path_list[:1])
-        GlobalObject().remote_connect = self.remote_connect
         
     def remote_connect(self, rname, rhost):
         """进行rpc的连接
