@@ -2,7 +2,9 @@
 在alpha 0.1.5做了如下的改进：
 １、单node节点断开与root节点的连接后自动重连。
 ２、修改了gfirefly的底层库gtiwsted,将socket发送数据放到一个协程中进处理，解决了
+
     AssertionError: This socket is already used by another greenlet
+
 的错误
 
 gtwisted的开源地址:https://github.com/9miao/gtwisted
