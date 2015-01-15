@@ -1,0 +1,1330 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>dbentrust &mdash; gfirefly 0.1.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="gfirefly 0.1.2 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="#">gfirefly 0.1.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="dbentrust">
+<h1>dbentrust<a class="headerlink" href="#dbentrust" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="dbentrust-dbpool-py">
+<h1>dbentrust/dbpool.py<a class="headerlink" href="#dbentrust-dbpool-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-dbentrust.dbpool"></span><p>Created on 2013-5-8</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="dbentrust.dbpool.DBPool">
+<em class="property">class </em><tt class="descclassname">dbentrust.dbpool.</tt><tt class="descname">DBPool</tt><a class="headerlink" href="#dbentrust.dbpool.DBPool" title="Permalink to this definition">¶</a></dt>
+<dd><p>数据库连接池</p>
+<dl class="method">
+<dt id="dbentrust.dbpool.DBPool.initPool">
+<tt class="descname">initPool</tt><big>(</big><em>**kw</em><big>)</big><a class="headerlink" href="#dbentrust.dbpool.DBPool.initPool" title="Permalink to this definition">¶</a></dt>
+<dd><p>根据连接配置初始化连接池配置信息.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">aa</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;host&#39;</span><span class="p">:</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span><span class="s">&#39;user&#39;</span><span class="p">:</span><span class="s">&#39;root&#39;</span><span class="p">,</span><span class="s">&#39;passwd&#39;</span><span class="p">:</span><span class="s">&#39;111&#39;</span><span class="p">,</span><span class="s">&#39;db&#39;</span><span class="p">:</span><span class="s">&#39;test&#39;</span><span class="p">,</span><span class="s">&#39;port&#39;</span><span class="p">:</span><span class="mi">3306</span><span class="p">,</span><span class="s">&#39;charset&#39;</span><span class="p">:</span><span class="s">&#39;utf8&#39;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dbpool</span><span class="o">.</span><span class="n">initPool</span><span class="p">(</span><span class="o">**</span><span class="n">aa</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dbentrust-madminanager-py">
+<h1>dbentrust/madminanager.py<a class="headerlink" href="#dbentrust-madminanager-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-dbentrust.madminanager"></span><p>Created on 2013-5-22</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="dbentrust.madminanager.MAdminManager">
+<em class="property">class </em><tt class="descclassname">dbentrust.madminanager.</tt><tt class="descname">MAdminManager</tt><a class="headerlink" href="#dbentrust.madminanager.MAdminManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>一个单例管理器。作为所有madmin的管理者</p>
+<dl class="method">
+<dt id="dbentrust.madminanager.MAdminManager.checkAdmins">
+<tt class="descname">checkAdmins</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.madminanager.MAdminManager.checkAdmins" title="Permalink to this definition">¶</a></dt>
+<dd><p>遍历所有的madmin，与数据库进行同步。</p>
+<p>&gt;&gt;&gt;MAdminManager().checkAdmins()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.madminanager.MAdminManager.dropAdmin">
+<tt class="descname">dropAdmin</tt><big>(</big><em>adminname</em><big>)</big><a class="headerlink" href="#dbentrust.madminanager.MAdminManager.dropAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>移除一个madmin对象.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">MAdminManager</span><span class="p">()</span><span class="o">.</span><span class="n">dropAdmin</span><span class="p">(</span><span class="n">madmin</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.madminanager.MAdminManager.getAdmin">
+<tt class="descname">getAdmin</tt><big>(</big><em>adminname</em><big>)</big><a class="headerlink" href="#dbentrust.madminanager.MAdminManager.getAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>根据madmin的名字获取madmin对象</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">madmin</span> <span class="o">=</span> <span class="n">MAdminManager</span><span class="p">()</span><span class="o">.</span><span class="n">getAdmin</span><span class="p">(</span><span class="s">&#39;tb_registe&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.madminanager.MAdminManager.registe">
+<tt class="descname">registe</tt><big>(</big><em>admin</em><big>)</big><a class="headerlink" href="#dbentrust.madminanager.MAdminManager.registe" title="Permalink to this definition">¶</a></dt>
+<dd><p>注册一个madmin对象到管理中.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">madmin</span> <span class="o">=</span> <span class="n">MAdmin</span><span class="p">(</span><span class="s">&#39;tb_registe&#39;</span><span class="p">,</span><span class="s">&#39;characterId&#39;</span><span class="p">,</span><span class="n">incrkey</span><span class="o">=</span><span class="s">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">MAdminManager</span><span class="p">()</span><span class="o">.</span><span class="n">registe</span><span class="p">(</span><span class="n">madmin</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dbentrust-memclient-py">
+<h1>dbentrust/memclient.py<a class="headerlink" href="#dbentrust-memclient-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-dbentrust.memclient"></span><p>Created on 2013-7-10
+memcached client
+&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="dbentrust.memclient.MemClient">
+<em class="property">class </em><tt class="descclassname">dbentrust.memclient.</tt><tt class="descname">MemClient</tt><big>(</big><em>timeout=0</em><big>)</big><a class="headerlink" href="#dbentrust.memclient.MemClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>memcached 连接类，对通过它存储到memcached中的key，定义了新的key的生成规则，避免key的冲突。</p>
+<p>&#64;param _hostname: str 这个连接的命名空间。新生成的key的规则会是  _hostname:key。</p>
+<p>&#64;param _urls: []list memcached的连接的配置</p>
+<p>&#64;param connection: memcached的连接实例。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mclient</span> <span class="o">=</span> <span class="n">MemClient</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="dbentrust.memclient.MemClient.connect">
+<tt class="descname">connect</tt><big>(</big><em>urls</em>, <em>hostname</em><big>)</big><a class="headerlink" href="#dbentrust.memclient.MemClient.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>memcached 建立连接，配置连接信息</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mclient</span><span class="o">.</span><span class="n">connect</span><span class="p">([</span><span class="s">&#39;127.0.0.1:11211&#39;</span><span class="p">],</span> <span class="s">&quot;test&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memclient.MemClient.delete">
+<tt class="descname">delete</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#dbentrust.memclient.MemClient.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memclient.MemClient.delete_multi">
+<tt class="descname">delete_multi</tt><big>(</big><em>keys</em><big>)</big><a class="headerlink" href="#dbentrust.memclient.MemClient.delete_multi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memclient.MemClient.flush_all">
+<tt class="descname">flush_all</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.memclient.MemClient.flush_all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memclient.MemClient.get">
+<tt class="descname">get</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#dbentrust.memclient.MemClient.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memclient.MemClient.get_multi">
+<tt class="descname">get_multi</tt><big>(</big><em>keys</em><big>)</big><a class="headerlink" href="#dbentrust.memclient.MemClient.get_multi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memclient.MemClient.incr">
+<tt class="descname">incr</tt><big>(</big><em>key</em>, <em>delta</em><big>)</big><a class="headerlink" href="#dbentrust.memclient.MemClient.incr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memclient.MemClient.produceKey">
+<tt class="descname">produceKey</tt><big>(</big><em>keyname</em><big>)</big><a class="headerlink" href="#dbentrust.memclient.MemClient.produceKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>重新生成新的key，规则是 _hostname:key</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mclient</span><span class="o">.</span><span class="n">produceKey</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span>
+<span class="go">test:name</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memclient.MemClient.set">
+<tt class="descname">set</tt><big>(</big><em>keyname</em>, <em>value</em><big>)</big><a class="headerlink" href="#dbentrust.memclient.MemClient.set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memclient.MemClient.set_multi">
+<tt class="descname">set_multi</tt><big>(</big><em>mapping</em><big>)</big><a class="headerlink" href="#dbentrust.memclient.MemClient.set_multi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="dbentrust.memclient.MemConnError">
+<em class="property">exception </em><tt class="descclassname">dbentrust.memclient.</tt><tt class="descname">MemConnError</tt><a class="headerlink" href="#dbentrust.memclient.MemConnError" title="Permalink to this definition">¶</a></dt>
+<dd><p>memcached 连接错误</p>
+</dd></dl>
+
+</div>
+<div class="section" id="dbentrust-memobject-py">
+<h1>dbentrust/memobject.py<a class="headerlink" href="#dbentrust-memobject-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-dbentrust.memobject"></span><p>Created on 2012-7-10
+memcached 关系对象</p>
+<p>通过key键的名称前缀来建立</p>
+<p>各个key-value 直接的关系</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="dbentrust.memobject.MemObject">
+<em class="property">class </em><tt class="descclassname">dbentrust.memobject.</tt><tt class="descname">MemObject</tt><big>(</big><em>name</em>, <em>mc</em><big>)</big><a class="headerlink" href="#dbentrust.memobject.MemObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>memcached 关系对象,可以将一个对象的属性值记录到memcached中。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Mcharacter</span><span class="p">(</span><span class="n">MemObject</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pid</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">mc</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="n">MemObject</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">mc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">pid</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="bp">self</span><span class="o">.</span><span class="n">profession</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="bp">self</span><span class="o">.</span><span class="n">nickname</span> <span class="o">=</span> <span class="s">u&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="bp">self</span><span class="o">.</span><span class="n">guanqia</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mcharacter</span> <span class="o">=</span> <span class="n">Mcharacter</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;character:1&#39;</span><span class="p">,</span><span class="n">mclient</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mcharacter</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;lan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mcharacter</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mcharacter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;nickname&#39;</span><span class="p">)</span>
+<span class="go">lan</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="dbentrust.memobject.MemObject.get">
+<tt class="descname">get</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#dbentrust.memobject.MemObject.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>获取对象值</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memobject.MemObject.get_multi">
+<tt class="descname">get_multi</tt><big>(</big><em>keys</em><big>)</big><a class="headerlink" href="#dbentrust.memobject.MemObject.get_multi" title="Permalink to this definition">¶</a></dt>
+<dd><p>一次获取多个key的值
+&#64;param keys: list(str) key的列表</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memobject.MemObject.incr">
+<tt class="descname">incr</tt><big>(</big><em>key</em>, <em>delta</em><big>)</big><a class="headerlink" href="#dbentrust.memobject.MemObject.incr" title="Permalink to this definition">¶</a></dt>
+<dd><p>自增</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memobject.MemObject.insert">
+<tt class="descname">insert</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.memobject.MemObject.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>插入对象记录</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memobject.MemObject.lock">
+<tt class="descname">lock</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.memobject.MemObject.lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>锁定对象</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memobject.MemObject.locked">
+<tt class="descname">locked</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.memobject.MemObject.locked" title="Permalink to this definition">¶</a></dt>
+<dd><p>检测对象是否被锁定</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memobject.MemObject.mdelete">
+<tt class="descname">mdelete</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.memobject.MemObject.mdelete" title="Permalink to this definition">¶</a></dt>
+<dd><p>删除memcache中的数据</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memobject.MemObject.produceKey">
+<tt class="descname">produceKey</tt><big>(</big><em>keyname</em><big>)</big><a class="headerlink" href="#dbentrust.memobject.MemObject.produceKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>重新生成key</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memobject.MemObject.release">
+<tt class="descname">release</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.memobject.MemObject.release" title="Permalink to this definition">¶</a></dt>
+<dd><p>释放锁</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memobject.MemObject.update">
+<tt class="descname">update</tt><big>(</big><em>key</em>, <em>values</em><big>)</big><a class="headerlink" href="#dbentrust.memobject.MemObject.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>修改对象的值</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.memobject.MemObject.update_multi">
+<tt class="descname">update_multi</tt><big>(</big><em>mapping</em><big>)</big><a class="headerlink" href="#dbentrust.memobject.MemObject.update_multi" title="Permalink to this definition">¶</a></dt>
+<dd><p>同时修改多个key值</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="id1">
+<h1>dbentrust/memobject.py<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-dbentrust.memobject"></span><p>Created on 2012-7-10
+memcached 关系对象</p>
+<p>通过key键的名称前缀来建立</p>
+<p>各个key-value 直接的关系</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt>
+<em class="property">class </em><tt class="descclassname">dbentrust.memobject.</tt><tt class="descname">MemObject</tt><big>(</big><em>name</em>, <em>mc</em><big>)</big></dt>
+<dd><p>memcached 关系对象,可以将一个对象的属性值记录到memcached中。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Mcharacter</span><span class="p">(</span><span class="n">MemObject</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pid</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">mc</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="n">MemObject</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">mc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">pid</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="bp">self</span><span class="o">.</span><span class="n">profession</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="bp">self</span><span class="o">.</span><span class="n">nickname</span> <span class="o">=</span> <span class="s">u&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="bp">self</span><span class="o">.</span><span class="n">guanqia</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mcharacter</span> <span class="o">=</span> <span class="n">Mcharacter</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;character:1&#39;</span><span class="p">,</span><span class="n">mclient</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mcharacter</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;lan&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mcharacter</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mcharacter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;nickname&#39;</span><span class="p">)</span>
+<span class="go">lan</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt>
+<tt class="descname">get</tt><big>(</big><em>key</em><big>)</big></dt>
+<dd><p>获取对象值</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">get_multi</tt><big>(</big><em>keys</em><big>)</big></dt>
+<dd><p>一次获取多个key的值
+&#64;param keys: list(str) key的列表</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">incr</tt><big>(</big><em>key</em>, <em>delta</em><big>)</big></dt>
+<dd><p>自增</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">insert</tt><big>(</big><big>)</big></dt>
+<dd><p>插入对象记录</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">lock</tt><big>(</big><big>)</big></dt>
+<dd><p>锁定对象</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">locked</tt><big>(</big><big>)</big></dt>
+<dd><p>检测对象是否被锁定</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">mdelete</tt><big>(</big><big>)</big></dt>
+<dd><p>删除memcache中的数据</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">produceKey</tt><big>(</big><em>keyname</em><big>)</big></dt>
+<dd><p>重新生成key</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">release</tt><big>(</big><big>)</big></dt>
+<dd><p>释放锁</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">update</tt><big>(</big><em>key</em>, <em>values</em><big>)</big></dt>
+<dd><p>修改对象的值</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<tt class="descname">update_multi</tt><big>(</big><em>mapping</em><big>)</big></dt>
+<dd><p>同时修改多个key值</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dbentrust-mmode-py">
+<h1>dbentrust/mmode.py<a class="headerlink" href="#dbentrust-mmode-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-dbentrust.mmode"></span><p>Created on 2013-5-8</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="dbentrust.mmode.MAdmin">
+<em class="property">class </em><tt class="descclassname">dbentrust.mmode.</tt><tt class="descname">MAdmin</tt><big>(</big><em>name</em>, <em>pk</em>, <em>timeout=1800</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#dbentrust.mmode.MAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>MMode对象管理，同一个MAdmin管理同一类的MMode，对应的是数据库中的某一种表</p>
+<dl class="method">
+<dt id="dbentrust.mmode.MAdmin.checkAll">
+<tt class="descname">checkAll</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.mmode.MAdmin.checkAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>同步内存中的数据到对应的数据表中。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">madmin</span><span class="o">.</span><span class="n">checkAll</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.mmode.MAdmin.deleteAllFk">
+<tt class="descname">deleteAllFk</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.mmode.MAdmin.deleteAllFk" title="Permalink to this definition">¶</a></dt>
+<dd><p>删除所有的外键</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.mmode.MAdmin.deleteMode">
+<tt class="descname">deleteMode</tt><big>(</big><em>pk</em><big>)</big><a class="headerlink" href="#dbentrust.mmode.MAdmin.deleteMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>根据主键删除内存中的某条记录信息，
+这里只是修改内存中的记录状态_state为删除状态.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">madmin</span><span class="o">.</span><span class="n">deleteMode</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.mmode.MAdmin.getAllPkByFk">
+<tt class="descname">getAllPkByFk</tt><big>(</big><em>fk</em><big>)</big><a class="headerlink" href="#dbentrust.mmode.MAdmin.getAllPkByFk" title="Permalink to this definition">¶</a></dt>
+<dd><p>根据外键获取主键列表</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.mmode.MAdmin.getObj">
+<tt class="descname">getObj</tt><big>(</big><em>pk</em><big>)</big><a class="headerlink" href="#dbentrust.mmode.MAdmin.getObj" title="Permalink to this definition">¶</a></dt>
+<dd><p>根据主键，可以获得mmode对象的实例.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">madmin</span><span class="o">.</span><span class="n">getObj</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.mmode.MAdmin.getObjData">
+<tt class="descname">getObjData</tt><big>(</big><em>pk</em><big>)</big><a class="headerlink" href="#dbentrust.mmode.MAdmin.getObjData" title="Permalink to this definition">¶</a></dt>
+<dd><p>根据主键，可以获得mmode对象的实例的数据.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">madmin</span><span class="o">.</span><span class="n">getObjData</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.mmode.MAdmin.getObjList">
+<tt class="descname">getObjList</tt><big>(</big><em>pklist</em><big>)</big><a class="headerlink" href="#dbentrust.mmode.MAdmin.getObjList" title="Permalink to this definition">¶</a></dt>
+<dd><p>根据主键列表获取mmode对象的列表.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">madmin</span><span class="o">.</span><span class="n">getObjList</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.mmode.MAdmin.insert">
+<tt class="descname">insert</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.mmode.MAdmin.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>将MAdmin配置的信息写入memcached中保存。
+当在其他的进程中实例化相同的配置的MAdmin，可以使得数据同步。</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.mmode.MAdmin.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.mmode.MAdmin.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>读取数据到数据库中</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dbentrust.mmode.MAdmin.madmininfo">
+<tt class="descname">madmininfo</tt><a class="headerlink" href="#dbentrust.mmode.MAdmin.madmininfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>作为一个特性属性。可以获取这个madmin的相关信息</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.mmode.MAdmin.new">
+<tt class="descname">new</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#dbentrust.mmode.MAdmin.new" title="Permalink to this definition">¶</a></dt>
+<dd><p>创建一个新的对象</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dbentrust.mmode.MFKMode">
+<em class="property">class </em><tt class="descclassname">dbentrust.mmode.</tt><tt class="descname">MFKMode</tt><big>(</big><em>name</em>, <em>pklist=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#dbentrust.mmode.MFKMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>外键内存数据模型</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="dbentrust.mmode.MMode">
+<em class="property">class </em><tt class="descclassname">dbentrust.mmode.</tt><tt class="descname">MMode</tt><big>(</big><em>name</em>, <em>pk</em>, <em>data={}</em><big>)</big><a class="headerlink" href="#dbentrust.mmode.MMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>内存数据模型，最终对应到的是表中的一条记录</p>
+<dl class="method">
+<dt id="dbentrust.mmode.MMode.IsEffective">
+<tt class="descname">IsEffective</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.mmode.MMode.IsEffective" title="Permalink to this definition">¶</a></dt>
+<dd><p>检测对象是否有效</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.mmode.MMode.checkSync">
+<tt class="descname">checkSync</tt><big>(</big><em>timeout=1800</em><big>)</big><a class="headerlink" href="#dbentrust.mmode.MMode.checkSync" title="Permalink to this definition">¶</a></dt>
+<dd><p>检测同步</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.mmode.MMode.delete">
+<tt class="descname">delete</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.mmode.MMode.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>删除对象</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.mmode.MMode.mdelete">
+<tt class="descname">mdelete</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.mmode.MMode.mdelete" title="Permalink to this definition">¶</a></dt>
+<dd><p>清理对象</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbentrust.mmode.MMode.syncDB">
+<tt class="descname">syncDB</tt><big>(</big><big>)</big><a class="headerlink" href="#dbentrust.mmode.MMode.syncDB" title="Permalink to this definition">¶</a></dt>
+<dd><p>同步到数据库</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="dbentrust.mmode.PKValueError">
+<em class="property">exception </em><tt class="descclassname">dbentrust.mmode.</tt><tt class="descname">PKValueError</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#dbentrust.mmode.PKValueError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="dbentrust-util-py">
+<h1>dbentrust/util.py<a class="headerlink" href="#dbentrust-util-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-dbentrust.util"></span><p>Created on 2013-5-8</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="function">
+<dt id="dbentrust.util.DeleteFromDB">
+<tt class="descclassname">dbentrust.util.</tt><tt class="descname">DeleteFromDB</tt><big>(</big><em>tablename</em>, <em>props</em><big>)</big><a class="headerlink" href="#dbentrust.util.DeleteFromDB" title="Permalink to this definition">¶</a></dt>
+<dd><p>从数据库中删除</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbentrust.util.EachQueryProps">
+<tt class="descclassname">dbentrust.util.</tt><tt class="descname">EachQueryProps</tt><big>(</big><em>props</em><big>)</big><a class="headerlink" href="#dbentrust.util.EachQueryProps" title="Permalink to this definition">¶</a></dt>
+<dd><p>遍历字段列表生成sql语句</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbentrust.util.FormatCondition">
+<tt class="descclassname">dbentrust.util.</tt><tt class="descname">FormatCondition</tt><big>(</big><em>props</em><big>)</big><a class="headerlink" href="#dbentrust.util.FormatCondition" title="Permalink to this definition">¶</a></dt>
+<dd><p>生成查询条件字符串</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbentrust.util.FormatUpdateStr">
+<tt class="descclassname">dbentrust.util.</tt><tt class="descname">FormatUpdateStr</tt><big>(</big><em>props</em><big>)</big><a class="headerlink" href="#dbentrust.util.FormatUpdateStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>生成更新语句</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbentrust.util.GetOneRecordInfo">
+<tt class="descclassname">dbentrust.util.</tt><tt class="descname">GetOneRecordInfo</tt><big>(</big><em>tablename</em>, <em>props</em><big>)</big><a class="headerlink" href="#dbentrust.util.GetOneRecordInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>获取单条数据的信息</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbentrust.util.GetRecordList">
+<tt class="descclassname">dbentrust.util.</tt><tt class="descname">GetRecordList</tt><big>(</big><em>tablename</em>, <em>pkname</em>, <em>pklist</em><big>)</big><a class="headerlink" href="#dbentrust.util.GetRecordList" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="dbentrust.util.GetTableIncrValue">
+<tt class="descclassname">dbentrust.util.</tt><tt class="descname">GetTableIncrValue</tt><big>(</big><em>tablename</em><big>)</big><a class="headerlink" href="#dbentrust.util.GetTableIncrValue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="dbentrust.util.InsertIntoDB">
+<tt class="descclassname">dbentrust.util.</tt><tt class="descname">InsertIntoDB</tt><big>(</big><em>tablename</em>, <em>data</em><big>)</big><a class="headerlink" href="#dbentrust.util.InsertIntoDB" title="Permalink to this definition">¶</a></dt>
+<dd><p>写入数据库</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbentrust.util.ReadDataFromDB">
+<tt class="descclassname">dbentrust.util.</tt><tt class="descname">ReadDataFromDB</tt><big>(</big><em>tablename</em><big>)</big><a class="headerlink" href="#dbentrust.util.ReadDataFromDB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="dbentrust.util.UpdateWithDict">
+<tt class="descclassname">dbentrust.util.</tt><tt class="descname">UpdateWithDict</tt><big>(</big><em>tablename</em>, <em>props</em>, <em>prere</em><big>)</big><a class="headerlink" href="#dbentrust.util.UpdateWithDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>更新记录</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbentrust.util.forEachQueryProps">
+<tt class="descclassname">dbentrust.util.</tt><tt class="descname">forEachQueryProps</tt><big>(</big><em>sqlstr</em>, <em>props</em><big>)</big><a class="headerlink" href="#dbentrust.util.forEachQueryProps" title="Permalink to this definition">¶</a></dt>
+<dd><p>遍历所要查询属性，以生成sql语句</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbentrust.util.forEachUpdateProps">
+<tt class="descclassname">dbentrust.util.</tt><tt class="descname">forEachUpdateProps</tt><big>(</big><em>tablename</em>, <em>props</em>, <em>prere</em><big>)</big><a class="headerlink" href="#dbentrust.util.forEachUpdateProps" title="Permalink to this definition">¶</a></dt>
+<dd><p>遍历所要修改的属性，以生成sql语句</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dbentrust.util.getAllPkByFkInDB">
+<tt class="descclassname">dbentrust.util.</tt><tt class="descname">getAllPkByFkInDB</tt><big>(</big><em>tablename</em>, <em>pkname</em>, <em>props</em><big>)</big><a class="headerlink" href="#dbentrust.util.getAllPkByFkInDB" title="Permalink to this definition">¶</a></dt>
+<dd><p>根据所有的外键获取主键ID</p>
+</dd></dl>
+
+</div>
+<div class="section" id="distributed">
+<h1>distributed<a class="headerlink" href="#distributed" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="distributed-child-py">
+<h1>distributed/child.py<a class="headerlink" href="#distributed-child-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-distributed.child"></span><p>Created on 2013-8-14</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="distributed.child.Child">
+<em class="property">class </em><tt class="descclassname">distributed.child.</tt><tt class="descname">Child</tt><big>(</big><em>cid</em>, <em>name</em><big>)</big><a class="headerlink" href="#distributed.child.Child" title="Permalink to this definition">¶</a></dt>
+<dd><p>子节点对象</p>
+<dl class="method">
+<dt id="distributed.child.Child.callbackChild">
+<tt class="descname">callbackChild</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.child.Child.callbackChild" title="Permalink to this definition">¶</a></dt>
+<dd><p>回调子节点的接口</p>
+<p>return a Defered Object (recvdata)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.child.Child.callbackChildForResult">
+<tt class="descname">callbackChildForResult</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.child.Child.callbackChildForResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>回调子节点的接口</p>
+<p>return a Defered Object (recvdata)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.child.Child.callbackChildNotForResult">
+<tt class="descname">callbackChildNotForResult</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.child.Child.callbackChildNotForResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>回调子节点的接口</p>
+<p>return a Defered Object (recvdata)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.child.Child.getName">
+<tt class="descname">getName</tt><big>(</big><big>)</big><a class="headerlink" href="#distributed.child.Child.getName" title="Permalink to this definition">¶</a></dt>
+<dd><p>获取子节点的名称</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.child.Child.setTransport">
+<tt class="descname">setTransport</tt><big>(</big><em>transport</em><big>)</big><a class="headerlink" href="#distributed.child.Child.setTransport" title="Permalink to this definition">¶</a></dt>
+<dd><p>设置子节点的通道</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="distributed-manager-py">
+<h1>distributed/manager.py<a class="headerlink" href="#distributed-manager-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-distributed.manager"></span><p>Created on 2013-8-14</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="distributed.manager.ChildsManager">
+<em class="property">class </em><tt class="descclassname">distributed.manager.</tt><tt class="descname">ChildsManager</tt><a class="headerlink" href="#distributed.manager.ChildsManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>子节点管理器</p>
+<dl class="method">
+<dt id="distributed.manager.ChildsManager.addChild">
+<tt class="descname">addChild</tt><big>(</big><em>child</em><big>)</big><a class="headerlink" href="#distributed.manager.ChildsManager.addChild" title="Permalink to this definition">¶</a></dt>
+<dd><p>添加一个child节点</p>
+<p>&#64;param child: Child object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.manager.ChildsManager.callChild">
+<tt class="descname">callChild</tt><big>(</big><em>childId</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.manager.ChildsManager.callChild" title="Permalink to this definition">¶</a></dt>
+<dd><p>调用子节点的接口</p>
+<p>&#64;param childId: int 子节点的id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.manager.ChildsManager.callChildByName">
+<tt class="descname">callChildByName</tt><big>(</big><em>childname</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.manager.ChildsManager.callChildByName" title="Permalink to this definition">¶</a></dt>
+<dd><p>调用子节点的接口</p>
+<p>&#64;param childname: str 子节点的名称</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.manager.ChildsManager.callChildByNameNotForResult">
+<tt class="descname">callChildByNameNotForResult</tt><big>(</big><em>childname</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.manager.ChildsManager.callChildByNameNotForResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>调用子节点的接口</p>
+<p>&#64;param childId: int 子节点的id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.manager.ChildsManager.callChildNotForResult">
+<tt class="descname">callChildNotForResult</tt><big>(</big><em>childId</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.manager.ChildsManager.callChildNotForResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>调用子节点的接口</p>
+<p>&#64;param childId: int 子节点的id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.manager.ChildsManager.dropChild">
+<tt class="descname">dropChild</tt><big>(</big><em>child</em><big>)</big><a class="headerlink" href="#distributed.manager.ChildsManager.dropChild" title="Permalink to this definition">¶</a></dt>
+<dd><p>删除一个child 节点</p>
+<p>&#64;param child: Child Object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.manager.ChildsManager.dropChildByID">
+<tt class="descname">dropChildByID</tt><big>(</big><em>childId</em><big>)</big><a class="headerlink" href="#distributed.manager.ChildsManager.dropChildByID" title="Permalink to this definition">¶</a></dt>
+<dd><p>删除一个child 节点</p>
+<p>&#64;param childId: Child ID</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.manager.ChildsManager.getChildBYSessionId">
+<tt class="descname">getChildBYSessionId</tt><big>(</big><em>session_id</em><big>)</big><a class="headerlink" href="#distributed.manager.ChildsManager.getChildBYSessionId" title="Permalink to this definition">¶</a></dt>
+<dd><p>根据sessionID获取child节点信息</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.manager.ChildsManager.getChildById">
+<tt class="descname">getChildById</tt><big>(</big><em>childId</em><big>)</big><a class="headerlink" href="#distributed.manager.ChildsManager.getChildById" title="Permalink to this definition">¶</a></dt>
+<dd><p>根据节点的ID获取节点实例</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.manager.ChildsManager.getChildByName">
+<tt class="descname">getChildByName</tt><big>(</big><em>childname</em><big>)</big><a class="headerlink" href="#distributed.manager.ChildsManager.getChildByName" title="Permalink to this definition">¶</a></dt>
+<dd><p>根据节点的名称获取节点实例</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="distributed-node-py">
+<h1>distributed/node.py<a class="headerlink" href="#distributed-node-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-distributed.node"></span><p>Created on 2013-8-14</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="distributed.node.RemoteObject">
+<em class="property">class </em><tt class="descclassname">distributed.node.</tt><tt class="descname">RemoteObject</tt><big>(</big><em>name</em>, <em>timeout=600</em><big>)</big><a class="headerlink" href="#distributed.node.RemoteObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>远程调用对象</p>
+<dl class="method">
+<dt id="distributed.node.RemoteObject.addServiceChannel">
+<tt class="descname">addServiceChannel</tt><big>(</big><em>service</em><big>)</big><a class="headerlink" href="#distributed.node.RemoteObject.addServiceChannel" title="Permalink to this definition">¶</a></dt>
+<dd><p>设置引用对象</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.node.RemoteObject.callRemote">
+<tt class="descname">callRemote</tt><big>(</big><em>commandId</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.node.RemoteObject.callRemote" title="Permalink to this definition">¶</a></dt>
+<dd><p>默认远程调用，等待结果放回</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.node.RemoteObject.callRemoteForResult">
+<tt class="descname">callRemoteForResult</tt><big>(</big><em>commandId</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.node.RemoteObject.callRemoteForResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>远程调用，并等待结果放回</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.node.RemoteObject.callRemoteNotForResult">
+<tt class="descname">callRemoteNotForResult</tt><big>(</big><em>commandId</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.node.RemoteObject.callRemoteNotForResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>远程调用,不需要结果放回</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.node.RemoteObject.connect">
+<tt class="descname">connect</tt><big>(</big><em>addr</em><big>)</big><a class="headerlink" href="#distributed.node.RemoteObject.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>初始化远程调用对象</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.node.RemoteObject.getName">
+<tt class="descname">getName</tt><big>(</big><big>)</big><a class="headerlink" href="#distributed.node.RemoteObject.getName" title="Permalink to this definition">¶</a></dt>
+<dd><p>获取节点的名称</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.node.RemoteObject.reconnect">
+<tt class="descname">reconnect</tt><big>(</big><em>addr=()</em><big>)</big><a class="headerlink" href="#distributed.node.RemoteObject.reconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>重新连接</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.node.RemoteObject.setName">
+<tt class="descname">setName</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#distributed.node.RemoteObject.setName" title="Permalink to this definition">¶</a></dt>
+<dd><p>设置节点的名称</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.node.RemoteObject.takeProxy">
+<tt class="descname">takeProxy</tt><big>(</big><big>)</big><a class="headerlink" href="#distributed.node.RemoteObject.takeProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>像远程服务端发送代理通道对象</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="distributed-reference-py">
+<h1>distributed/reference.py<a class="headerlink" href="#distributed-reference-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-distributed.reference"></span><p>Created on 2013-8-14</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="distributed.reference.ProxyReference">
+<em class="property">class </em><tt class="descclassname">distributed.reference.</tt><tt class="descname">ProxyReference</tt><a class="headerlink" href="#distributed.reference.ProxyReference" title="Permalink to this definition">¶</a></dt>
+<dd><p>代理通道</p>
+<dl class="method">
+<dt id="distributed.reference.ProxyReference.addService">
+<tt class="descname">addService</tt><big>(</big><em>service</em><big>)</big><a class="headerlink" href="#distributed.reference.ProxyReference.addService" title="Permalink to this definition">¶</a></dt>
+<dd><p>添加一条服务通道</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.reference.ProxyReference.remote_callChild">
+<tt class="descname">remote_callChild</tt><big>(</big><em>command</em>, <em>*arg</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.reference.ProxyReference.remote_callChild" title="Permalink to this definition">¶</a></dt>
+<dd><p>代理发送数据</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="distributed-root-py">
+<h1>distributed/root.py<a class="headerlink" href="#distributed-root-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-distributed.root"></span><p>Created on 2013-8-14
+分布式根节点
+&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="distributed.root.PBRoot">
+<em class="property">class </em><tt class="descclassname">distributed.root.</tt><tt class="descname">PBRoot</tt><big>(</big><em>dnsmanager=&lt;distributed.manager.ChildsManager object at 0x000000000507D3C8&gt;</em><big>)</big><a class="headerlink" href="#distributed.root.PBRoot" title="Permalink to this definition">¶</a></dt>
+<dd><p>PB 协议</p>
+<dl class="method">
+<dt id="distributed.root.PBRoot.addServiceChannel">
+<tt class="descname">addServiceChannel</tt><big>(</big><em>service</em><big>)</big><a class="headerlink" href="#distributed.root.PBRoot.addServiceChannel" title="Permalink to this definition">¶</a></dt>
+<dd><p>添加服务通道
+&#64;param service: Service Object(In bilateral.services)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.root.PBRoot.callChild">
+<tt class="descname">callChild</tt><big>(</big><em>key</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.root.PBRoot.callChild" title="Permalink to this definition">¶</a></dt>
+<dd><p>调用子节点的接口
+&#64;param childId: int 子节点的id
+return Defered Object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.root.PBRoot.callChildByName">
+<tt class="descname">callChildByName</tt><big>(</big><em>childname</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.root.PBRoot.callChildByName" title="Permalink to this definition">¶</a></dt>
+<dd><p>调用子节点的接口
+&#64;param childId: int 子节点的id
+return Defered Object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.root.PBRoot.doChildConnect">
+<tt class="descname">doChildConnect</tt><big>(</big><em>name</em>, <em>transport</em><big>)</big><a class="headerlink" href="#distributed.root.PBRoot.doChildConnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>当node节点连接时的处理</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.root.PBRoot.doChildLostConnect">
+<tt class="descname">doChildLostConnect</tt><big>(</big><em>childId</em><big>)</big><a class="headerlink" href="#distributed.root.PBRoot.doChildLostConnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>当node节点连接时的处理</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.root.PBRoot.dropChild">
+<tt class="descname">dropChild</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.root.PBRoot.dropChild" title="Permalink to this definition">¶</a></dt>
+<dd><p>删除子节点记录</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.root.PBRoot.dropChildByID">
+<tt class="descname">dropChildByID</tt><big>(</big><em>childId</em><big>)</big><a class="headerlink" href="#distributed.root.PBRoot.dropChildByID" title="Permalink to this definition">¶</a></dt>
+<dd><p>删除子节点记录</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.root.PBRoot.dropChildSessionId">
+<tt class="descname">dropChildSessionId</tt><big>(</big><em>session_id</em><big>)</big><a class="headerlink" href="#distributed.root.PBRoot.dropChildSessionId" title="Permalink to this definition">¶</a></dt>
+<dd><p>删除子节点记录</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.root.PBRoot.remote_callTarget">
+<tt class="descname">remote_callTarget</tt><big>(</big><em>command</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#distributed.root.PBRoot.remote_callTarget" title="Permalink to this definition">¶</a></dt>
+<dd><p>远程调用方法
+&#64;param commandId: int 指令号
+&#64;param data: str 调用参数</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="distributed.root.PBRoot.remote_takeProxy">
+<tt class="descname">remote_takeProxy</tt><big>(</big><em>name</em>, <em>transport</em><big>)</big><a class="headerlink" href="#distributed.root.PBRoot.remote_takeProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>设置代理通道
+&#64;param name: 根节点的名称</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="netconnect">
+<h1>netconnect<a class="headerlink" href="#netconnect" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="netconnect-connection-py">
+<h1>netconnect/connection.py<a class="headerlink" href="#netconnect-connection-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-netconnect.connection"></span><p>Created on 2014-2-23</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="netconnect.connection.Connection">
+<em class="property">class </em><tt class="descclassname">netconnect.connection.</tt><tt class="descname">Connection</tt><big>(</big><em>_conn</em><big>)</big><a class="headerlink" href="#netconnect.connection.Connection" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="netconnect.connection.Connection.loseConnection">
+<tt class="descname">loseConnection</tt><big>(</big><big>)</big><a class="headerlink" href="#netconnect.connection.Connection.loseConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>断开与客户端的连接</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.connection.Connection.safeToWriteData">
+<tt class="descname">safeToWriteData</tt><big>(</big><em>topicID</em>, <em>msg</em><big>)</big><a class="headerlink" href="#netconnect.connection.Connection.safeToWriteData" title="Permalink to this definition">¶</a></dt>
+<dd><p>发送消息</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="netconnect-datapack-py">
+<h1>netconnect/datapack.py<a class="headerlink" href="#netconnect-datapack-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-netconnect.datapack"></span><p>Created on 2014-2-23</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="exception">
+<dt id="netconnect.datapack.DataPackError">
+<em class="property">exception </em><tt class="descclassname">netconnect.datapack.</tt><tt class="descname">DataPackError</tt><a class="headerlink" href="#netconnect.datapack.DataPackError" title="Permalink to this definition">¶</a></dt>
+<dd><p>An error occurred binding to an interface</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="netconnect.datapack.DataPackProtoc">
+<em class="property">class </em><tt class="descclassname">netconnect.datapack.</tt><tt class="descname">DataPackProtoc</tt><big>(</big><em>HEAD_0=0</em>, <em>HEAD_1=0</em>, <em>HEAD_2=0</em>, <em>HEAD_3=0</em>, <em>protoVersion=0</em>, <em>serverVersion=0</em><big>)</big><a class="headerlink" href="#netconnect.datapack.DataPackProtoc" title="Permalink to this definition">¶</a></dt>
+<dd><p>数据包协议</p>
+<dl class="method">
+<dt id="netconnect.datapack.DataPackProtoc.getHeadlength">
+<tt class="descname">getHeadlength</tt><big>(</big><big>)</big><a class="headerlink" href="#netconnect.datapack.DataPackProtoc.getHeadlength" title="Permalink to this definition">¶</a></dt>
+<dd><p>获取数据包的长度</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.datapack.DataPackProtoc.pack">
+<tt class="descname">pack</tt><big>(</big><em>response</em>, <em>command</em><big>)</big><a class="headerlink" href="#netconnect.datapack.DataPackProtoc.pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>打包数据包</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.datapack.DataPackProtoc.unpack">
+<tt class="descname">unpack</tt><big>(</big><em>dpack</em><big>)</big><a class="headerlink" href="#netconnect.datapack.DataPackProtoc.unpack" title="Permalink to this definition">¶</a></dt>
+<dd><p>解包</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="netconnect-manager-py">
+<h1>netconnect/manager.py<a class="headerlink" href="#netconnect-manager-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-netconnect.manager"></span><p>Created on 2014-2-23
+连接管理器
+&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="netconnect.manager.ConnectionManager">
+<em class="property">class </em><tt class="descclassname">netconnect.manager.</tt><tt class="descname">ConnectionManager</tt><a class="headerlink" href="#netconnect.manager.ConnectionManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>连接管理器
+&#64;param _connections: dict {connID:conn Object}管理的所有连接</p>
+<dl class="method">
+<dt id="netconnect.manager.ConnectionManager.addConnection">
+<tt class="descname">addConnection</tt><big>(</big><em>conn</em><big>)</big><a class="headerlink" href="#netconnect.manager.ConnectionManager.addConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>加入一条连接
+&#64;param _conn: Conn object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.manager.ConnectionManager.dropConnectionByID">
+<tt class="descname">dropConnectionByID</tt><big>(</big><em>connID</em><big>)</big><a class="headerlink" href="#netconnect.manager.ConnectionManager.dropConnectionByID" title="Permalink to this definition">¶</a></dt>
+<dd><p>更加连接的id删除连接实例
+&#64;param connID: int 连接的id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.manager.ConnectionManager.getConnectionByID">
+<tt class="descname">getConnectionByID</tt><big>(</big><em>connID</em><big>)</big><a class="headerlink" href="#netconnect.manager.ConnectionManager.getConnectionByID" title="Permalink to this definition">¶</a></dt>
+<dd><p>根据ID获取一条连接
+&#64;param connID: int 连接的id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.manager.ConnectionManager.getNowConnCnt">
+<tt class="descname">getNowConnCnt</tt><big>(</big><big>)</big><a class="headerlink" href="#netconnect.manager.ConnectionManager.getNowConnCnt" title="Permalink to this definition">¶</a></dt>
+<dd><p>获取当前连接数量</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.manager.ConnectionManager.loseConnection">
+<tt class="descname">loseConnection</tt><big>(</big><em>connID</em><big>)</big><a class="headerlink" href="#netconnect.manager.ConnectionManager.loseConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>根据连接ID主动端口与客户端的连接</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.manager.ConnectionManager.pushObject">
+<tt class="descname">pushObject</tt><big>(</big><em>topicID</em>, <em>msg</em>, <em>sendList</em><big>)</big><a class="headerlink" href="#netconnect.manager.ConnectionManager.pushObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>主动推送消息</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="netconnect-protoc-py">
+<h1>netconnect/protoc.py<a class="headerlink" href="#netconnect-protoc-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-netconnect.protoc"></span><p>Created on 2014-2-23
+登陆服务器协议
+&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="netconnect.protoc.LiberateFactory">
+<em class="property">class </em><tt class="descclassname">netconnect.protoc.</tt><tt class="descname">LiberateFactory</tt><big>(</big><em>dataprotocl=&lt;gfirefly.netconnect.datapack.DataPackProtoc instance at 0x0000000005191D48&gt;</em><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>协议工厂</p>
+<dl class="method">
+<dt id="netconnect.protoc.LiberateFactory.addServiceChannel">
+<tt class="descname">addServiceChannel</tt><big>(</big><em>service</em><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateFactory.addServiceChannel" title="Permalink to this definition">¶</a></dt>
+<dd><p>添加服务通道</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.protoc.LiberateFactory.doConnectionLost">
+<tt class="descname">doConnectionLost</tt><big>(</big><em>conn</em><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateFactory.doConnectionLost" title="Permalink to this definition">¶</a></dt>
+<dd><p>连接断开时的处理</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.protoc.LiberateFactory.doConnectionMade">
+<tt class="descname">doConnectionMade</tt><big>(</big><em>conn</em><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateFactory.doConnectionMade" title="Permalink to this definition">¶</a></dt>
+<dd><p>当连接建立时的处理</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.protoc.LiberateFactory.doDataReceived">
+<tt class="descname">doDataReceived</tt><big>(</big><em>conn</em>, <em>commandID</em>, <em>data</em><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateFactory.doDataReceived" title="Permalink to this definition">¶</a></dt>
+<dd><p>数据到达时的处理</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.protoc.LiberateFactory.loseConnection">
+<tt class="descname">loseConnection</tt><big>(</big><em>connID</em><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateFactory.loseConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>主动端口与客户端的连接</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.protoc.LiberateFactory.produceResult">
+<tt class="descname">produceResult</tt><big>(</big><em>command</em>, <em>response</em><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateFactory.produceResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>产生客户端需要的最终结果
+&#64;param response: str 分布式客户端获取的结果</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="netconnect.protoc.LiberateFactory.protocol">
+<tt class="descname">protocol</tt><a class="headerlink" href="#netconnect.protoc.LiberateFactory.protocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#netconnect.protoc.LiberateProtocol" title="netconnect.protoc.LiberateProtocol"><tt class="xref py py-class docutils literal"><span class="pre">LiberateProtocol</span></tt></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.protoc.LiberateFactory.pushObject">
+<tt class="descname">pushObject</tt><big>(</big><em>topicID</em>, <em>msg</em>, <em>sendList</em><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateFactory.pushObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>服务端向客户端推消息
+&#64;param topicID: int 消息的主题id号
+&#64;param msg: 消息的类容，protobuf结构类型
+&#64;param sendList: 推向的目标列表(客户端id 列表)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.protoc.LiberateFactory.setDataProtocl">
+<tt class="descname">setDataProtocl</tt><big>(</big><em>dataprotocl</em><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateFactory.setDataProtocl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="netconnect.protoc.LiberateProtocol">
+<em class="property">class </em><tt class="descclassname">netconnect.protoc.</tt><tt class="descname">LiberateProtocol</tt><big>(</big><em>transport</em>, <em>factory</em><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>协议</p>
+<dl class="method">
+<dt id="netconnect.protoc.LiberateProtocol.connectionLost">
+<tt class="descname">connectionLost</tt><big>(</big><em>reason</em><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateProtocol.connectionLost" title="Permalink to this definition">¶</a></dt>
+<dd><p>连接断开处理</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.protoc.LiberateProtocol.connectionMade">
+<tt class="descname">connectionMade</tt><big>(</big><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateProtocol.connectionMade" title="Permalink to this definition">¶</a></dt>
+<dd><p>连接建立处理</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.protoc.LiberateProtocol.dataReceived">
+<tt class="descname">dataReceived</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateProtocol.dataReceived" title="Permalink to this definition">¶</a></dt>
+<dd><p>数据到达处理
+&#64;param data: str 客户端传送过来的数据</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="netconnect.protoc.LiberateProtocol.safeToWriteData">
+<tt class="descname">safeToWriteData</tt><big>(</big><em>data</em>, <em>command</em><big>)</big><a class="headerlink" href="#netconnect.protoc.LiberateProtocol.safeToWriteData" title="Permalink to this definition">¶</a></dt>
+<dd><p>线程安全的向客户端发送数据
+&#64;param data: str 要向客户端写的数据</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="server">
+<h1>server<a class="headerlink" href="#server" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="server-admin-py">
+<h1>server/admin.py<a class="headerlink" href="#server-admin-py" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="server-globalobject-py">
+<h1>server/globalobject.py<a class="headerlink" href="#server-globalobject-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-server.globalobject"></span><p>Created on 2013-8-2</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="server.globalobject.GlobalObject">
+<em class="property">class </em><tt class="descclassname">server.globalobject.</tt><tt class="descname">GlobalObject</tt><a class="headerlink" href="#server.globalobject.GlobalObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>单例，存放了服务中的netfactory，root节点，所有的remote节点的句柄。</p>
+<dl class="method">
+<dt id="server.globalobject.GlobalObject.config">
+<tt class="descname">config</tt><big>(</big><em>netfactory=None</em>, <em>root=None</em>, <em>remote=None</em>, <em>db=None</em><big>)</big><a class="headerlink" href="#server.globalobject.GlobalObject.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>配置存放的对象实例</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="server.globalobject.masterserviceHandle">
+<tt class="descclassname">server.globalobject.</tt><tt class="descname">masterserviceHandle</tt><big>(</big><em>target</em><big>)</big><a class="headerlink" href="#server.globalobject.masterserviceHandle" title="Permalink to this definition">¶</a></dt>
+<dd><p>供master调用的接口描述符</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.globalobject.netserviceHandle">
+<tt class="descclassname">server.globalobject.</tt><tt class="descname">netserviceHandle</tt><big>(</big><em>target</em><big>)</big><a class="headerlink" href="#server.globalobject.netserviceHandle" title="Permalink to this definition">¶</a></dt>
+<dd><p>供客户端连接调用的接口描述符</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="server.globalobject.remoteserviceHandle">
+<em class="property">class </em><tt class="descclassname">server.globalobject.</tt><tt class="descname">remoteserviceHandle</tt><big>(</big><em>remotename</em><big>)</big><a class="headerlink" href="#server.globalobject.remoteserviceHandle" title="Permalink to this definition">¶</a></dt>
+<dd><p>作为remote节点，供某个root节点调用的接口描述符</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="server.globalobject.rootserviceHandle">
+<tt class="descclassname">server.globalobject.</tt><tt class="descname">rootserviceHandle</tt><big>(</big><em>target</em><big>)</big><a class="headerlink" href="#server.globalobject.rootserviceHandle" title="Permalink to this definition">¶</a></dt>
+<dd><p>作为root节点，供remote节点调用的接口描述符</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="server.globalobject.webserviceHandle">
+<em class="property">class </em><tt class="descclassname">server.globalobject.</tt><tt class="descname">webserviceHandle</tt><big>(</big><em>url</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#server.globalobject.webserviceHandle" title="Permalink to this definition">¶</a></dt>
+<dd><p>这是一个修饰符对象,修饰http接口的连接地址。</p>
+</dd></dl>
+
+</div>
+<div class="section" id="server-logobj-py">
+<h1>server/logobj.py<a class="headerlink" href="#server-logobj-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-server.logobj"></span><p>Created on 2013-8-6</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="server.logobj.loogoo">
+<em class="property">class </em><tt class="descclassname">server.logobj.</tt><tt class="descname">loogoo</tt><big>(</big><em>logpath</em><big>)</big><a class="headerlink" href="#server.logobj.loogoo" title="Permalink to this definition">¶</a></dt>
+<dd><p>日志处理</p>
+</dd></dl>
+
+</div>
+<div class="section" id="server-server-py">
+<h1>server/server.py<a class="headerlink" href="#server-server-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-server.server"></span><p>Created on 2013-8-2</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="server.server.FFServer">
+<em class="property">class </em><tt class="descclassname">server.server.</tt><tt class="descname">FFServer</tt><a class="headerlink" href="#server.server.FFServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>抽象出的一个服务进程</p>
+<dl class="method">
+<dt id="server.server.FFServer.config">
+<tt class="descname">config</tt><big>(</big><em>config</em>, <em>servername=None</em>, <em>dbconfig=None</em>, <em>memconfig=None</em>, <em>masterconf=None</em><big>)</big><a class="headerlink" href="#server.server.FFServer.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>配置服务器</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="server.server.FFServer.remote_connect">
+<tt class="descname">remote_connect</tt><big>(</big><em>rname</em>, <em>rhost</em><big>)</big><a class="headerlink" href="#server.server.FFServer.remote_connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>进行rpc的连接</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="server.server.FFServer.start">
+<tt class="descname">start</tt><big>(</big><big>)</big><a class="headerlink" href="#server.server.FFServer.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>启动服务器</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="server.server.serverStop">
+<tt class="descclassname">server.server.</tt><tt class="descname">serverStop</tt><big>(</big><big>)</big><a class="headerlink" href="#server.server.serverStop" title="Permalink to this definition">¶</a></dt>
+<dd><p>停止服务进程</p>
+</dd></dl>
+
+</div>
+<div class="section" id="master">
+<h1>master<a class="headerlink" href="#master" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="master-master-py">
+<h1>master/master.py<a class="headerlink" href="#master-master-py" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-master.master"></span><p>Created on 2013-8-2</p>
+<p>&#64;author: lan (www.9miao.com)</p>
+<dl class="class">
+<dt id="master.master.Master">
+<em class="property">class </em><tt class="descclassname">master.master.</tt><tt class="descname">Master</tt><a class="headerlink" href="#master.master.Master" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="master.master.Master.config">
+<tt class="descname">config</tt><big>(</big><em>configpath</em>, <em>mainpath</em><big>)</big><a class="headerlink" href="#master.master.Master.config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="master.master.Master.masterapp">
+<tt class="descname">masterapp</tt><big>(</big><big>)</big><a class="headerlink" href="#master.master.Master.masterapp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="master.master.Master.start">
+<tt class="descname">start</tt><big>(</big><big>)</big><a class="headerlink" href="#master.master.Master.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="master-rootapp-py">
+<h1>master/rootapp.py<a class="headerlink" href="#master-rootapp-py" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="master-webapp-py">
+<h1>master/webapp.py<a class="headerlink" href="#master-webapp-py" title="Permalink to this headline">¶</a></h1>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">dbentrust</a></li>
+<li><a class="reference internal" href="#dbentrust-dbpool-py">dbentrust/dbpool.py</a></li>
+<li><a class="reference internal" href="#dbentrust-madminanager-py">dbentrust/madminanager.py</a></li>
+<li><a class="reference internal" href="#dbentrust-memclient-py">dbentrust/memclient.py</a></li>
+<li><a class="reference internal" href="#dbentrust-memobject-py">dbentrust/memobject.py</a></li>
+<li><a class="reference internal" href="#id1">dbentrust/memobject.py</a></li>
+<li><a class="reference internal" href="#dbentrust-mmode-py">dbentrust/mmode.py</a></li>
+<li><a class="reference internal" href="#dbentrust-util-py">dbentrust/util.py</a></li>
+<li><a class="reference internal" href="#distributed">distributed</a></li>
+<li><a class="reference internal" href="#distributed-child-py">distributed/child.py</a></li>
+<li><a class="reference internal" href="#distributed-manager-py">distributed/manager.py</a></li>
+<li><a class="reference internal" href="#distributed-node-py">distributed/node.py</a></li>
+<li><a class="reference internal" href="#distributed-reference-py">distributed/reference.py</a></li>
+<li><a class="reference internal" href="#distributed-root-py">distributed/root.py</a></li>
+<li><a class="reference internal" href="#netconnect">netconnect</a></li>
+<li><a class="reference internal" href="#netconnect-connection-py">netconnect/connection.py</a></li>
+<li><a class="reference internal" href="#netconnect-datapack-py">netconnect/datapack.py</a></li>
+<li><a class="reference internal" href="#netconnect-manager-py">netconnect/manager.py</a></li>
+<li><a class="reference internal" href="#netconnect-protoc-py">netconnect/protoc.py</a></li>
+<li><a class="reference internal" href="#server">server</a></li>
+<li><a class="reference internal" href="#server-admin-py">server/admin.py</a></li>
+<li><a class="reference internal" href="#server-globalobject-py">server/globalobject.py</a></li>
+<li><a class="reference internal" href="#server-logobj-py">server/logobj.py</a></li>
+<li><a class="reference internal" href="#server-server-py">server/server.py</a></li>
+<li><a class="reference internal" href="#master">master</a></li>
+<li><a class="reference internal" href="#master-master-py">master/master.py</a></li>
+<li><a class="reference internal" href="#master-rootapp-py">master/rootapp.py</a></li>
+<li><a class="reference internal" href="#master-webapp-py">master/webapp.py</a></li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="#">gfirefly 0.1.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, lan.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

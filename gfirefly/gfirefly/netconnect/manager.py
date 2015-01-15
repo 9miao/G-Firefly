@@ -7,6 +7,7 @@ Created on 2014-2-23
 
 from gtwisted.utils import log
 from connection import Connection
+import traceback
 
 class ConnectionManager:
     ''' 连接管理器
@@ -63,6 +64,6 @@ class ConnectionManager:
                 if conn:
                     conn.safeToWriteData(topicID,msg)
             except Exception,e:
-                log.err(str(e))
+                log.err(e,traceback.format_exc())
 
 

@@ -6,6 +6,7 @@ Created on 2014-2-23
 '''
 from gtwisted.utils import log
 import struct
+import traceback
 
 class DataPackError(Exception):
     """An error occurred binding to an interface"""
@@ -65,7 +66,7 @@ class DataPackProtoc:
         try:
             ud = struct.unpack('!sssss3I',dpack)
         except struct.error,de:
-            log.err(de)
+            log.err(de,traceback.format_exc())
             return {'result':False,'command':0,'length':0}
         HEAD_0 = ord(ud[0])
         HEAD_1 = ord(ud[1])
