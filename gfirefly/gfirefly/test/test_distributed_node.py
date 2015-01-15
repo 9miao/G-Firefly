@@ -12,6 +12,7 @@ import sys
 
 log.startLogging(sys.stdout)
 
+
 reactor = reactor
 
 addr = ('localhost',9090)#目标主机的地址
@@ -31,15 +32,18 @@ def serviceHandle(target):
 def printOK_1(data):
     print data
     print "############################"
+#     raise 
     return "call printOK_01"
     
 def apptest(commandID,*args,**kw):
     d = remote.callRemote(commandID,*args,**kw)
     print "apptest result:",d
+#     raise 
     return d
 
 def startClient():
     reactor.callLater(3,apptest,'printData1',u"node测试1",u"node测试2")
+    reactor.callLater(5,apptest,'printData1',u"node测试1",u"node测试2")
     remote.connect(addr)#连接远程主机
     reactor.run()
 

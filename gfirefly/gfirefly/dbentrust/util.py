@@ -9,10 +9,19 @@ from dbpool import dbpool
 from MySQLdb.cursors import DictCursor
 from numbers import Number
 from gtwisted.utils import log
+import traceback
+
+class SQLError(Exception): 
+    """
+    memcached key error
+    """
+    
+    def __str__(self):
+        return "memcache key error"
 
 
 def forEachPlusInsertProps(tablename,props):
-    assert type(props) == dict
+    assert isinstance(props, dict)
     pkeysstr = str(tuple(props.keys())).replace('\'','`')
     pvaluesstr = ["%s,"%val if isinstance(val,Number) else 
                   "'%s',"%str(val).replace("'", "\\'") for val in props.values()]
@@ -50,7 +59,7 @@ def FormatUpdateStr(props):
     
 def forEachUpdateProps(tablename,props,prere):
     '''遍历所要修改的属性，以生成sql语句'''
-    assert type(props) == dict
+    assert isinstance(props, dict)
     pro = FormatUpdateStr(props)
     pre = FormatCondition(prere)
     sqlstr = """UPDATE `%s` SET %s WHERE %s;"""%(tablename,pro,pre) 
@@ -91,10 +100,10 @@ def forEachQueryProps(sqlstr, props):
 def GetTableIncrValue(tablename):
     """
     """
-    database = dbpool.config.get('db')
+    conn = dbpool.connection(write=False,tablename=tablename)
+    database = conn._conn._kwargs.get('db')
     sql = """SELECT AUTO_INCREMENT FROM information_schema.`TABLES` \
     WHERE TABLE_SCHEMA='%s' AND TABLE_NAME='%s';"""%(database,tablename)
-    conn = dbpool.connection()
     cursor = conn.cursor()
     cursor.execute(sql)
     result = cursor.fetchone()
@@ -108,7 +117,7 @@ def ReadDataFromDB(tablename):
     """
     """
     sql = """select * from %s"""%tablename
-    conn = dbpool.connection()
+    conn = dbpool.connection(write=False,tablename=tablename)
     cursor = conn.cursor(cursorclass = DictCursor)
     cursor.execute(sql)
     result=cursor.fetchall()
@@ -121,32 +130,41 @@ def DeleteFromDB(tablename,props):
     '''
     prers = FormatCondition(props)
     sql = """DELETE FROM %s WHERE %s ;"""%(tablename,prers)
-    conn = dbpool.connection()
+    conn = dbpool.connection(write=True,tablename=tablename)
     cursor = conn.cursor()
     count = 0
     try:
         count = cursor.execute(sql)
         conn.commit()
     except Exception,e:
-        log.err(e)
+        log.err(e,traceback.format_exc())
         log.err(sql)
     cursor.close()
     conn.close()
     return bool(count)
 
+def InsertIntoDBAndReturnID(tablename,data):
+    """写入数据库,并返回ID
+    """
+    sql = forEachPlusInsertProps(tablename,data)
+    conn = dbpool.connection(write=True,tablename=tablename)
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    conn.commit()
+    cursor.execute("SELECT LAST_INSERT_ID();")
+    result=cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
+    return result
+
 def InsertIntoDB(tablename,data):
     """写入数据库
     """
     sql = forEachPlusInsertProps(tablename,data)
-    conn = dbpool.connection()
+    conn = dbpool.connection(write=True,tablename=tablename)
     cursor = conn.cursor()
-    count = 0
-    try:
-        count = cursor.execute(sql)
-        conn.commit()
-    except Exception,e:
-        log.err(e)
-        log.err(sql)
+    count = cursor.execute(sql)
+    conn.commit()
     cursor.close()
     conn.close()
     return bool(count)
@@ -155,14 +173,14 @@ def UpdateWithDict(tablename,props,prere):
     """更新记录
     """
     sql = forEachUpdateProps(tablename, props, prere)
-    conn = dbpool.connection()
+    conn = dbpool.connection(write=True,tablename=tablename)
     cursor = conn.cursor()
     count = 0
     try:
         count = cursor.execute(sql)
         conn.commit()
     except Exception,e:
-        log.err(e)
+        log.err(e,traceback.format_exc())
         log.err(sql)
     cursor.close()
     conn.close()
@@ -175,7 +193,7 @@ def getAllPkByFkInDB(tablename,pkname,props):
     """
     props = FormatCondition(props)
     sql = """Select `%s` from `%s` where %s"""%(pkname,tablename,props)
-    conn = dbpool.connection()
+    conn = dbpool.connection(write=False,tablename=tablename)
     cursor = conn.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()
@@ -188,7 +206,7 @@ def GetOneRecordInfo(tablename,props):
     '''
     props = FormatCondition(props)
     sql = """Select * from `%s` where %s"""%(tablename,props)
-    conn = dbpool.connection()
+    conn = dbpool.connection(write=False,tablename=tablename)
     cursor = conn.cursor(cursorclass = DictCursor)
     cursor.execute(sql)
     result = cursor.fetchone()
@@ -204,7 +222,7 @@ def GetRecordList(tablename,pkname,pklist):
         pkliststr+="%s,"%pkid
     pkliststr = "(%s)"%pkliststr[:-1]
     sql = """SELECT * FROM `%s` WHERE `%s` IN %s;"""%(tablename,pkname,pkliststr)
-    conn = dbpool.connection()
+    conn = dbpool.connection(write=False,tablename=tablename)
     cursor = conn.cursor(cursorclass = DictCursor)
     cursor.execute(sql)
     result = cursor.fetchall()
@@ -214,7 +232,7 @@ def GetRecordList(tablename,pkname,pklist):
 
 def DBTest():
     sql = """SELECT * FROM tb_item WHERE characterId=1000001;"""
-    conn = dbpool.connection()
+    conn = dbpool.connection(write=False,tablename="tb_item")
     cursor = conn.cursor(cursorclass = DictCursor)
     cursor.execute(sql)
     result=cursor.fetchall()
@@ -245,5 +263,7 @@ def getallkeys(key,mem):
     return allkeys
 
 def getAllPkByFkInMEM(key,fk,mem):
-    
     pass
+
+
+

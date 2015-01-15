@@ -5,7 +5,7 @@ Created on 2013-8-8
 @author: lan (www.9miao.com)
 '''
 import sys,os
-startmasterfile =['#coding:utf8\n', '\n', 'from gevent import monkey; monkey.patch_os()\n', '\n', 'if __name__=="__main__":\n', '    from gfirefly.master.master import Master\n', '    master = Master()\n', "    master.config('config.json','appmain.py')\n", '    master.start()\n', '    \n', '    ']
+startmasterfile =['#coding:utf8\n', '\n', 'from gevent import monkey; monkey.patch_all()\n', '\n', 'if __name__=="__main__":\n', '    from gfirefly.master.master import Master\n', '    master = Master()\n', "    master.config('config.json','appmain.py')\n", '    master.start()\n', '    \n', '    ']
 configfile = ['{\n', 
               '"master":{"roothost":"localhost","rootport":9999,"webport":9998},\n',
                '"servers":{\n', '"net":{"netport":1000,"name":"gate","remoteport":[{"rootport":20001,"rootname":"gate"}],"app":"app.apptest"},\n',

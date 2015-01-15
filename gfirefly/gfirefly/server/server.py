@@ -9,7 +9,7 @@ from flask import Flask
 from gfirefly.distributed.root import PBRoot,BilateralFactory
 from gfirefly.distributed.node import RemoteObject
 from gfirefly.dbentrust.dbpool import dbpool
-from gfirefly.dbentrust.memclient import mclient
+from gfirefly.dbentrust.memclient import memcached_connect
 from gfirefly.server.logobj import loogoo
 from gfirefly.server.globalobject import GlobalObject
 from gtwisted.utils import log
@@ -50,6 +50,7 @@ class FFServer:
         '''配置服务器
         '''
         GlobalObject().json_config = config
+        GlobalObject().remote_connect = self.remote_connect
         netport = config.get('netport')#客户端连接
         webport = config.get('webport')#http连接
         rootport = config.get('rootport')#root节点配置
@@ -86,13 +87,15 @@ class FFServer:
             self.remote[rname] = RemoteObject(self.servername)
             
         if hasdb and dbconfig:
-            log.msg(str(dbconfig))
-            dbpool.initPool(**dbconfig)
+            if dict.has_key("user") and dict.has_key("host") and dict.has_key("host"):
+                dbpool.initPool({"default":dbconfig})
+            else:
+                dbpool.initPool(dbconfig)
             
         if hasmem and memconfig:
             urls = memconfig.get('urls')
-            hostname = str(memconfig.get('hostname'))
-            mclient.connect(urls, hostname)
+#             hostname = str(memconfig.get('hostname'))
+            memcached_connect(urls)
             
         if logpath:
             log.addObserver(loogoo(logpath))#日志处理
@@ -103,21 +106,31 @@ class FFServer:
         GlobalObject().config(netfactory = self.netfactory, root=self.root,
                     remote = self.remote)
         
-        if masterconf:
-            masterport = masterconf.get('rootport')
-            masterhost = masterconf.get('roothost')
-            self.master_remote = RemoteObject(servername)
-            addr = ('localhost',masterport) if not masterhost else (masterhost,masterport)
-            self.master_remote.connect(addr)
-            GlobalObject().masterremote = self.master_remote
-        import admin
-        
         if app:
             __import__(app)
         if mreload:
             _path_list = mreload.split(".")
             GlobalObject().reloadmodule = __import__(mreload,fromlist=_path_list[:1])
+<<<<<<< HEAD
+=======
         GlobalObject().remote_connect = self.remote_connect
+>>>>>>> f6ca9bff3e555e18cb3dc38d4573e3f5e59b4329
+        
+        if masterconf:
+            masterport = masterconf.get('rootport')
+            masterhost = masterconf.get('roothost')
+            self.master_remote = RemoteObject(servername)
+<<<<<<< HEAD
+            GlobalObject().masterremote = self.master_remote
+            import admin
+            addr = ('localhost',masterport) if not masterhost else (masterhost,masterport)
+            self.master_remote.connect(addr)        
+=======
+            addr = ('localhost',masterport) if not masterhost else (masterhost,masterport)
+            self.master_remote.connect(addr)
+            GlobalObject().masterremote = self.master_remote
+        import admin
+>>>>>>> f6ca9bff3e555e18cb3dc38d4573e3f5e59b4329
         
     def remote_connect(self, rname, rhost):
         """进行rpc的连接
@@ -139,5 +152,7 @@ class FFServer:
         log.msg('[%s] started...'%self.servername)
         log.msg('[%s] pid: %s'%(self.servername,os.getpid()))
         reactor.run()
+        
+        
         
         

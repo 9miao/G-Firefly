@@ -5,27 +5,73 @@ Created on 2013-5-8
 @author: lan (www.9miao.com)
 '''
 from DBUtils.PooledDB import PooledDB
-import MySQLdb
 
-DBCS = {'mysql':MySQLdb,}
+DBCS = {'MySQLdb':"MySQLdb",}
 
-class DBPool(object):
-    '''数据库连接池
-    '''
+# class DBPool(PooledDB):
+#     """
+#     """
+#     def __init__(self, creator, *args, **kwargs):
+#         PooledDB.__init__(self, creator, *args, **kwargs)
+#         self.config = kwargs
+
+class RouterBase(object):
+    """
+    """
     
-    def initPool(self,**kw):
-        '''根据连接配置初始化连接池配置信息.
-
-        >>> aa = {'host':"localhost",'user':'root','passwd':'111','db':'test','port':3306,'charset':'utf8'}
-        >>> dbpool.initPool(**aa)
-        '''
-        self.config = kw
-        creator = DBCS.get(kw.get('engine','mysql'),MySQLdb)
-        self.pool = PooledDB(creator,5,**kw)
+    def db_for_write(self,**kw):
+        pass
+    
+    def db_for_read(self,**kw):
+        pass
+    
         
-    def connection(self):
-        return self.pool.connection()
+class MultiDBPool(object):
+    """
+    """
+    def __init__(self):
+        """
+        """
+        self.router = None
+    
+    def initPool(self,config):
+        """
+        """
+        self.dbpool = {}
+        for dbkey,dbconfig in config.items():
+            _creator = DBCS.get(dbconfig.get('engine','MySQLdb'))
+            creator = __import__(_creator)
+            self.dbpool[dbkey] = PooledDB(creator,**dbconfig)
+            
+    def bind_router(self,router):
+        """
+        """
+        self.router = router()
+        
+    def getPool(self,write=True,**kw):
+        """
+        """
+        if not self.router:
+            return self.dbpool.values()[0]
+        if write:
+            dbkey = self.router.db_for_write(**kw)
+            return self.dbpool[dbkey]
+        else:
+            dbkey = self.router.db_for_read(**kw)
+            return self.dbpool[dbkey]
+        
+    def connection(self,write=True,**kw):
+        """
+        """
+        if not self.router:
+            return self.dbpool.values()[0].connection(shareable=kw.get("shareable",True))
+        if write:
+            dbkey = self.router.db_for_write(**kw)
+            return self.dbpool[dbkey].connection(shareable=kw.get("shareable",True))
+        else:
+            dbkey = self.router.db_for_read(**kw)
+            return self.dbpool[dbkey].connection(shareable=kw.get("shareable",True))
 
-#数据库连接池对象
-dbpool = DBPool()
+
+dbpool = MultiDBPool()
 
