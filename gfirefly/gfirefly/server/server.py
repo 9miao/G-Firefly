@@ -111,15 +111,26 @@ class FFServer:
         if mreload:
             _path_list = mreload.split(".")
             GlobalObject().reloadmodule = __import__(mreload,fromlist=_path_list[:1])
+<<<<<<< HEAD
+=======
+        GlobalObject().remote_connect = self.remote_connect
+>>>>>>> f6ca9bff3e555e18cb3dc38d4573e3f5e59b4329
         
         if masterconf:
             masterport = masterconf.get('rootport')
             masterhost = masterconf.get('roothost')
             self.master_remote = RemoteObject(servername)
+<<<<<<< HEAD
             GlobalObject().masterremote = self.master_remote
             import admin
             addr = ('localhost',masterport) if not masterhost else (masterhost,masterport)
             self.master_remote.connect(addr)        
+=======
+            addr = ('localhost',masterport) if not masterhost else (masterhost,masterport)
+            self.master_remote.connect(addr)
+            GlobalObject().masterremote = self.master_remote
+        import admin
+>>>>>>> f6ca9bff3e555e18cb3dc38d4573e3f5e59b4329
         
     def remote_connect(self, rname, rhost):
         """进行rpc的连接

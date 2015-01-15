@@ -28,6 +28,10 @@ def printData1(data,data1):
     print data,data1
     print "############################"
 #     d = root.callChild("test_node",1,u'Root测试')
+<<<<<<< HEAD
+=======
+    raise
+>>>>>>> f6ca9bff3e555e18cb3dc38d4573e3f5e59b4329
     return data
 
 @serviceHandle
