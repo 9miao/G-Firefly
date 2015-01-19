@@ -14,6 +14,17 @@ DBCS = {'MySQLdb':"MySQLdb",}
 #     def __init__(self, creator, *args, **kwargs):
 #         PooledDB.__init__(self, creator, *args, **kwargs)
 #         self.config = kwargs
+
+class RouterBase(object):
+    """
+    """
+    
+    def db_for_write(self,**kw):
+        pass
+    
+    def db_for_read(self,**kw):
+        pass
+    
         
 class MultiDBPool(object):
     """
@@ -35,7 +46,7 @@ class MultiDBPool(object):
     def bind_router(self,router):
         """
         """
-        self.router = router
+        self.router = router()
         
     def getPool(self,write=True,**kw):
         """
