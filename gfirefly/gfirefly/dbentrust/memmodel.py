@@ -122,7 +122,7 @@ class MemAdmin(object):
     def getObj(self,pk):
         '''根据主键，可以获得mmode对象的实例.
         '''
-        mm = MemModel(self.name+':%s'%pk,self.pk)
+        mm = MemModel(self.name+':%s'%pk,self.pk,**self.kw)
         if mm.data:
             return mm
         else:
@@ -140,7 +140,7 @@ class MemAdmin(object):
         '''
         objlist = []
         for pk in pklist:
-            mm = MemModel(self.name+':%s'%pk,self.pk)
+            mm = MemModel(self.name+':%s'%pk,self.pk,**self.kw)
             objlist.append(mm)
         return objlist
     
@@ -159,20 +159,19 @@ if __name__=="__main__":
           }
     dbpool.initPool(aa)
 
-    ma = MemAdmin('tb_role_info','id',incrkey='id')
+    ma = MemAdmin('tb_role_info','id',incrkey='id',cas=True)
     ma.load()
     t1 = time.time()
-    mm = ma.getObj(30)
+    mm = ma.getObj(1)
     mm.data['vip_exp'] = 123
     print "mm.data",mm.data
     print "use time :",time.time()-t1
     data = dict(mm.data)
     print "mc get",mclient.get("tb_role_info:1:data")
-    print mclient.set("qweqwe",123)
     del data['id']
     mm_new = ma.new(data)
     print "mc get",mclient.get("tb_role_info:1:data")
     print "mm_new.data",mm_new.data
-#     del mm,mm_new
+    del mm,mm_new
 
 
