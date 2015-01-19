@@ -82,7 +82,7 @@ class DataPackProtoc:
             return {'result':False,'command':0,'length':0}
         return {'result':True,'command':command,'length':length}
         
-    def pack(self,response,command):
+    def pack(self,command,response):
         '''打包数据包
         '''
         HEAD_0 = chr(self.HEAD_0)

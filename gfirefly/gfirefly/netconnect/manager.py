@@ -54,6 +54,7 @@ class ConnectionManager:
         conn = self.getConnectionByID(connID)
         if conn:
             conn.loseConnection()
+            self.dropConnectionByID(connID)
         
     def pushObject(self,topicID , msg, sendList):
         """主动推送消息
