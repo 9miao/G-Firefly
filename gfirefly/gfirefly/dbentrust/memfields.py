@@ -4,11 +4,10 @@ Created on 2014-12-31
 
 @author: lan (www.9miao.com)
 '''
-from numbers import Number
 import memclient
+import time
 LOCK_TIMEOUT = 2
 CACHE_TIMEOUT = 60*60
-
 
 class MEMKeyError(Exception): 
     """
@@ -61,16 +60,19 @@ class MemFields(object):
 
 class MemObj(object):
     
-    def __init__(self, name, cache=True, cas=False, timeout=CACHE_TIMEOUT,**kw):
+    def __init__(self, name,**kw):
         """
         @param name: str 表示对象的名称
         
         """
         self._name = name
         self._locked = False
-        self._cas = cas
-        self._cache = cache
-        self._timeout = timeout
+        self._timestamp = 0
+        self._cas = kw.get("cas",False)
+        self._cache = kw.get("cache",True)
+        self._timeout = kw.get("cache",CACHE_TIMEOUT)
+        if self._cas:
+            self.lock()
         
     def initFields(self):
         """
@@ -81,8 +83,7 @@ class MemObj(object):
             if isinstance(item_value, MemFields):
                 item_value.name = self.produceKey(item_key)
                 item_value.timeout = self._timeout
-                if item_key in ["state","cache"]:
-                    item_value.cache = self._cache
+                item_value.cache = self._cache
                 
     def produceKey(self,keyname):
         '''
@@ -93,22 +94,33 @@ class MemObj(object):
         else:
             raise MEMKeyError()
         
+    def isLocked(self):
+        """
+        """
+        tdelta = time.time()-self._timestamp
+        if tdelta>=LOCK_TIMEOUT:
+            self._locked=False
+        return self._locked
+        
     def lock(self):
         '''
         检测对象是否被锁定
         '''
-        key = self.produceKey('_lock')
-        result = memclient.mclient.add(key,1,LOCK_TIMEOUT)
-        if result:
-            self._locked = result
-        return result
-    
+        if not self.isLocked():
+            key = self.produceKey('_lock')
+            result = memclient.mclient.add(key,1,LOCK_TIMEOUT)
+            if result:
+                self._timestamp=time.time()
+                self._locked = result
+        return self._locked
+        
     def release(self):
         '''释放锁
         '''
-        key = self.produceKey('_lock')
-        memclient.mclient.delete(key)
-        self._locked = False
+        if self.isLocked():
+            key = self.produceKey('_lock')
+            memclient.mclient.delete(key)
+            self._locked = False
             
     def insert(self):
         '''
@@ -134,10 +146,9 @@ class MemObj(object):
         """
         value = object.__getattribute__(self,attr)
         if isinstance(value, MemFields):
-            if self._cas:
-                import time
+            if self._cas and not self.isLocked():
                 for _ in xrange(10):
-                    if self.lock():
+                    if not self.lock():
                         time.sleep(0.2)
                         continue
                     break
@@ -153,8 +164,8 @@ class MemObj(object):
             _value = object.__getattribute__(self,attr)
             if isinstance(_value, MemFields):
                 result = _value.setValue(value)
-                if self._cas:
-                    self.release()
+#                 if self._cas:
+#                     self.release()
                 return result
             else:
                 return object.__setattr__(self, attr,value)
@@ -166,21 +177,18 @@ class MemObj(object):
         在对象销毁时释放锁，避免在获取memcache数据时死锁
         """
         try:
-            if not self._locked:
+            if self.isLocked():
                 self.release()
-        except:
-            pass
+        except Exception as e:
+            print e
         
             
-            
-
-        
 if __name__=="__main__":
     from memclient import memcached_connect
     memcached_connect(["127.0.0.1:11211"])
     class Mcharacter(MemObj):
-        def __init__(self,name):
-            MemObj.__init__(self, name)
+        def __init__(self,name,**kw):
+            MemObj.__init__(self, name,**kw)
             self.id = MemFields(1)
             self.level = MemFields(0)
             self.profession = MemFields(9)
@@ -188,19 +196,16 @@ if __name__=="__main__":
             self.guanqia = MemFields(100)
             self.initFields()
     
-    mcharacter = Mcharacter('character:1')
-    mcharacter.nickname='lanjinmin'
+    mcharacter = Mcharacter('character:1',cas=True)
+    mcharacter.nickname = 'lanjinmin'
     mcharacter.insert()
     print "mcharacter.nickname",mcharacter.nickname
-    mc_other = Mcharacter('character:1')
-    mc_other2 = Mcharacter('character:2')
+    mcharacter.release()
+    mc_other = Mcharacter('character:1',cas=True)
+    mc_other2 = Mcharacter('character:2',cas=True)
     print "mc_other.nickname",mc_other.nickname
     print "mc_other2.nickname",mc_other2.nickname
-    print "mcharacter.guanqia",mcharacter.guanqia
     print "mc_other.guanqia",mc_other.guanqia
-    mcharacter.mdelete()
-    print "mcharacter.guanqia",mcharacter.guanqia
     print type(mc_other.guanqia)
-    isinstance(None, MemFields)
-    del mcharacter,mc_other,mc_other2
-    print "okkkkkkkkkkkk"
+    del mc_other,mc_other2
+    
