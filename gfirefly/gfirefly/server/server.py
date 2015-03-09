@@ -87,7 +87,7 @@ class FFServer:
             self.remote[rname] = RemoteObject(self.servername)
             
         if hasdb and dbconfig:
-            if dict.has_key("user") and dict.has_key("host") and dict.has_key("host"):
+            if dbconfig.has_key("user") and dbconfig.has_key("host") and dbconfig.has_key("host"):
                 dbpool.initPool({"default":dbconfig})
             else:
                 dbpool.initPool(dbconfig)
