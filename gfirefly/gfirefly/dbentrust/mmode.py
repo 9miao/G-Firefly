@@ -4,26 +4,19 @@ Created on 2013-5-8
 
 @author: lan (www.9miao.com)
 '''
-from memclient import mclient
-from memobject import MemObject
+from memobject import MemObject,CACHE_TIMEOUT
 import util
-import time
+from gevent import Greenlet,queue
+from gevent_zeromq import zmq
+from gfirefly.utils.singleton import Singleton
+from util import ToDBAddress
+import traceback
+from gtwisted.utils import log
 
-MMODE_STATE_ORI = 0     #未变更
 MMODE_STATE_NEW = 1     #创建
 MMODE_STATE_UPDATE = 2  #更新
 MMODE_STATE_DEL = 3     #删除
 
-
-
-TIMEOUT = 1800
-
-def _insert(args):
-    record,pkname,mmname,cls =  args
-    pk = record[pkname]
-    mm = cls(mmname+':%s'%pk,pkname,data=record)
-    mm.insert()
-    return pk
 
 class PKValueError(ValueError): 
     """
@@ -33,128 +26,180 @@ class PKValueError(ValueError):
         self.data = data
     def __str__(self):
         return "new record has no 'PK': %s" % (self.data)
+    
+class DBPub(Greenlet):
+    """
+    """
+    __metaclass__ = Singleton
+    
+    def __init__(self, run=None, *args, **kwargs):
+        Greenlet.__init__(self)
+        self.isStart = False
+        self.inbox = queue.Queue()
+        context = zmq.Context()
+        self.sock = context.socket(zmq.PUB)
+        self.to_db_address = (ToDBAddress().m2db_host,ToDBAddress().m2db_port)
+        
+    def send(self,message):
+        """
+        """
+        if not self.isStart:
+            self.start()
+        self.isStart=True
+        self.inbox.put(message)
+        
+    def _run(self):
+        """执行协议
+        """
+        address = 'tcp://%s:%s'%self.to_db_address
+        self.sock.connect(address)
+        while True:
+            try:
+                message = self.inbox.get()
+                self.sock.send_pyobj(message)
+            except Exception as e:
+                log.err(_stuff=e,_why=traceback.format_exc())
+                log.msg(str(message))
 
 class MMode(MemObject):
     """内存数据模型，最终对应到的是表中的一条记录
     """
-    def __init__(self, name,pk,data={}):
+    def __init__(self, name,pk,data={},fk=None,**kw):
         """
         """
-        MemObject.__init__(self, name, mclient)
-        self._state = MMODE_STATE_ORI#对象的状态 0未变更  1新建 2更新 3删除
+        MemObject.__init__(self, name,**kw)
         self._pk = pk
+        self._fk = fk
         self.data = data
-        self._time = time.time()
         
     def update(self, key, values):
-        data = self.get_multi(['data','_state'])
-        ntime = time.time()
-        data['data'].update({key:values})
-        if data.get('_state')==MMODE_STATE_NEW:
-            props = {'data':data.get('data'),'_time':ntime}
-        else:
-            props = {'_state':MMODE_STATE_UPDATE,'data':data.get('data'),'_time':ntime}
-        return MemObject.update_multi(self, props)
+        data = self.getData()
+        if self._fk and self._fk==key:
+            fk = data.get(self._fk,"")
+            tb_name = self._name.split(":")[0]
+            old_name = '%s_fk:%s'%(tb_name,fk)
+            pk = data.get(self._pk)
+            old_fkmm = MFKMode(old_name)
+            old_pklist = old_fkmm.get('pklist')
+            if old_pklist and pk in old_pklist:
+                old_pklist.remove(pk)
+                old_fkmm.update('pklist', old_pklist)
+            new_name = '%s_fk:%s'%(tb_name,values)
+            new_fkmm = MFKMode(new_name)
+            new_pklist = new_fkmm.get('pklist')
+            if new_pklist and pk not in new_pklist:
+                new_pklist.append(pk)
+                new_fkmm.update('pklist', new_pklist)
+        data.update({key:values})
+        result = MemObject.update(self, 'data',data)
+        self.syncDB()
+        return result
     
     def update_multi(self, mapping):
-        ntime = time.time()
-        data = self.get_multi(['data','_state'])
-        data['data'].update(mapping)
-        if data.get('_state')==MMODE_STATE_NEW:
-            props = {'data':data.get('data'),'_time':ntime}
-        else:
-            props = {'_state':MMODE_STATE_UPDATE,'data':data.get('data'),'_time':ntime}
-        return MemObject.update_multi(self, props)
-    
-    def get(self, key):
-        ntime = time.time()
-        MemObject.update(self, "_time", ntime)
-        return MemObject.get(self, key)
+        data = self.getData()
+        if self._fk and self._fk in mapping.keys():
+            fk = data.get(self._fk,"")
+            tb_name = self._name.split(":")[0]
+            old_name = '%s_fk:%s'%(tb_name,fk)
+            pk = data.get(self._pk)
+            old_fkmm = MFKMode(old_name)
+            old_pklist = old_fkmm.get('pklist')
+            if old_pklist and pk in old_pklist:
+                old_pklist.remove(pk)
+                old_fkmm.update('pklist', old_pklist)
+            values = mapping.get(self._fk,"")
+            new_name = '%s_fk:%s'%(tb_name,values)
+            new_fkmm = MFKMode(new_name)
+            new_pklist = new_fkmm.get('pklist')
+            if new_pklist and pk not in new_pklist:
+                new_pklist.append(pk)
+                new_fkmm.update('pklist', new_pklist)
+        data.update(mapping)
+        result = MemObject.update(self, 'data',data)
+        self.syncDB()
+        return result
     
     def get_multi(self, keys):
-        ntime = time.time()
-        MemObject.update(self, "_time", ntime)
         return MemObject.get_multi(self, keys)
     
-    def delete(self):
-        '''删除对象
-        '''
-        return MemObject.update(self,'_state',MMODE_STATE_DEL)
+    def getData(self):
+        """获取data数据
+        """
+        data = self.get('data')
+        if data:
+            return data
+        tablename,pk_value = self._name.split(':')
+        props = {self._pk:int(pk_value)}
+        record = util.GetOneRecordInfo(tablename,props)
+        if record:
+            self.data = record
+            self.insert()
+            return self.data
+        return None
     
-    def mdelete(self):
+    def delete(self):
         """清理对象
         """
-        self.syncDB()
-        MemObject.mdelete(self)
+        self.syncDB(state=MMODE_STATE_DEL)
+        if self._fk:
+            data = self.getData()
+            if data:
+                fk = data.get(self._fk,"")
+                tb_name = self._name.split(":")[0]
+                name = '%s_fk:%s'%(tb_name,fk)
+                fkmm = MFKMode(name)
+                pklist = fkmm.get('pklist')
+                pk = data.get(self._pk)
+                if pklist and pk in pklist:
+                    pklist.remove(pk)
+                    fkmm.update('pklist', pklist)
+        self.mdelete()
     
     def IsEffective(self):
         '''检测对象是否有效
         '''
-        if self.get('_state')==MMODE_STATE_DEL:
-            return False
         return True
         
-    def syncDB(self):
+    def syncDB(self,state=MMODE_STATE_UPDATE):
         """同步到数据库
         """
-        state = self.get('_state')
         tablename = self._name.split(':')[0]
-        if state==MMODE_STATE_ORI:
-            return
-        elif state==MMODE_STATE_NEW:
-            props = self.get('data')
-            pk = self.get('_pk')
+        if state==MMODE_STATE_NEW:
+            props = self.getData()
+            pk = self._pk
             result = util.InsertIntoDB(tablename, props)
         elif state==MMODE_STATE_UPDATE:
-            props = self.get('data')
-            pk = self.get('_pk')
+            props = self.getData()
+            pk = self._pk
             prere = {pk:props.get(pk)}
-            util.UpdateWithDict(tablename, props, prere)
+            sql = util.UpdateWithDictSQL(tablename, props, prere)
+            DBPub().send((tablename,sql))
             result = True
         else:
-            pk = self.get('_pk')
-            props = self.get('data')
+            pk = self._pk
+            props = self.getData()
             prere = {pk:props.get(pk)}
             result = util.DeleteFromDB(tablename,prere)
-        if result:
-            MemObject.update(self,'_state', MMODE_STATE_ORI)
+        return result
             
-    def checkSync(self,timeout=TIMEOUT):
-        """检测同步
-        """
-        ntime = time.time()
-        objtime = MemObject.get(self, '_time')
-        if ntime  -objtime>=timeout and timeout:
-            self.mdelete()
-        else:
-            self.syncDB()
-        
         
 class MFKMode(MemObject):
     """外键内存数据模型
     """
     def __init__(self, name,pklist = []):
-        MemObject.__init__(self, name, mclient)
+        MemObject.__init__(self, name)
         self.pklist = pklist
         
-class MAdmin(MemObject):
+class MAdmin(object):
     """MMode对象管理，同一个MAdmin管理同一类的MMode，对应的是数据库中的某一种表
     """
     
-    def __init__(self, name,pk,timeout=TIMEOUT,**kw):
-        MemObject.__init__(self, name, mclient)
-        self._pk = pk
+    def __init__(self, name,pk,**kw):
+        self._name = name
+        self.pk = pk
         self._fk = kw.get('fk','')
-        self._incrkey = kw.get('incrkey','')
-        self._incrvalue = kw.get('incrvalue',0)
-        self._timeout = timeout
-        
-    def insert(self):
-        """将MAdmin配置的信息写入memcached中保存。\n当在其他的进程中实例化相同的配置的MAdmin，可以使得数据同步。
-        """
-        if self._incrkey and not self.get("_incrvalue"):
-            self._incrvalue = util.GetTableIncrValue(self._name)
-        MemObject.insert(self)
+        self.incrkey = kw.get('incrkey','')
+        self.timeout = kw.get('timeout',CACHE_TIMEOUT)
         
     def load(self):
         '''读取数据到数据库中
@@ -162,17 +207,9 @@ class MAdmin(MemObject):
         mmname = self._name
         recordlist = util.ReadDataFromDB(mmname)
         for record in recordlist:
-            pk = record[self._pk]
-            mm = MMode(self._name+':%s'%pk,self._pk,data=record)
+            pk = record[self.pk]
+            mm = MMode(self._name+':%s'%pk,self.pk,data=record,fk=self._fk,timeout=self.timeout)
             mm.insert()
-    
-    @property
-    def madmininfo(self):
-        """作为一个特性属性。可以获取这个madmin的相关信息
-        """
-        keys = self.__dict__.keys()
-        info = self.get_multi(keys)
-        return info
     
     def getAllPkByFk(self,fk):
         '''根据外键获取主键列表
@@ -183,7 +220,7 @@ class MAdmin(MemObject):
         if pklist is not None:
             return pklist
         props = {self._fk:fk}
-        dbkeylist = util.getAllPkByFkInDB(self._name, self._pk, props)
+        dbkeylist = util.getAllPkByFkInDB(self._name, self.pk, props)
         name = '%s_fk:%s'%(self._name,fk)
         fkmm = MFKMode(name, pklist = dbkeylist)
         fkmm.insert()
@@ -193,16 +230,14 @@ class MAdmin(MemObject):
         '''根据主键，可以获得mmode对象的实例.\n
         >>> m = madmin.getObj(1)
         '''
-        mm = MMode(self._name+':%s'%pk,self._pk)
-        if not mm.IsEffective():
-            return None
+        mm = MMode(self._name+':%s'%pk,self.pk,fk=self._fk,timeout=self.timeout)
         if mm.get('data'):
             return mm
-        props = {self._pk:pk}
+        props = {self.pk:pk}
         record = util.GetOneRecordInfo(self._name,props)
         if not record:
             return None
-        mm =  MMode(self._name+':%s'%pk,self._pk,data = record)
+        mm =  MMode(self._name+':%s'%pk,self.pk,data = record,fk=self._fk,timeout=self.timeout)
         mm.insert()
         return mm
     
@@ -210,17 +245,17 @@ class MAdmin(MemObject):
         '''根据主键，可以获得mmode对象的实例的数据.\n
         >>> m = madmin.getObjData(1)
         '''
-        mm = MMode(self._name+':%s'%pk,self._pk)
+        mm = MMode(self._name+':%s'%pk,self.pk,fk=self._fk,timeout=self.timeout)
         if not mm.IsEffective():
             return None
         data = mm.get('data')
         if mm.get('data'):
             return data
-        props = {self._pk:pk}
+        props = {self.pk:pk}
         record = util.GetOneRecordInfo(self._name,props)
         if not record:
             return None
-        mm =  MMode(self._name+':%s'%pk,self._pk,data = record)
+        mm =  MMode(self._name+':%s'%pk,self.pk,data = record,fk=self._fk,timeout=self.timeout)
         mm.insert()
         return record
         
@@ -232,7 +267,7 @@ class MAdmin(MemObject):
         _pklist = []
         objlist = []
         for pk in pklist:
-            mm = MMode(self._name+':%s'%pk,self._pk)
+            mm = MMode(self._name+':%s'%pk,self.pk,fk=self._fk,timeout=self.timeout)
             if not mm.IsEffective():
                 continue
             if mm.get('data'):
@@ -240,10 +275,10 @@ class MAdmin(MemObject):
             else:
                 _pklist.append(pk)
         if _pklist:
-            recordlist = util.GetRecordList(self._name, self._pk,_pklist)
+            recordlist = util.GetRecordList(self._name, self.pk,_pklist)
             for record in recordlist:
-                pk = record[self._pk]
-                mm =  MMode(self._name+':%s'%pk,self._pk,data = record)
+                pk = record[self.pk]
+                mm =  MMode(self._name+':%s'%pk,self.pk,data = record,fk=self._fk,timeout=self.timeout)
                 mm.insert()
                 objlist.append(mm)
         return objlist
@@ -267,47 +302,51 @@ class MAdmin(MemObject):
             mm.delete()
         return True
     
-    def checkAll(self):
-        """同步内存中的数据到对应的数据表中。\n
-        >>> m = madmin.checkAll()
-        """
-        key = '%s:%s:'%(mclient._hostname,self._name)
-        _pklist = util.getallkeys(key, mclient.connection)
-        for pk in _pklist:
-            mm = MMode(self._name+':%s'%pk,self._pk)
-            if not mm.IsEffective():
-                mm.mdelete()
-                continue
-            if not mm.get('data'):
-                continue
-            mm.checkSync(timeout=self._timeout)
-        self.deleteAllFk()
+#     def checkAll(self):
+#         """同步内存中的数据到对应的数据表中。\n
+#         >>> m = madmin.checkAll()
+#         """
+#         key = '%s:%s:'%(mclient._hostname,self._name)
+#         _pklist = util.getallkeys(key, mclient.connection)
+#         for pk in _pklist:
+#             mm = MMode(self._name+':%s'%pk,self.pk,fk=self._fk)
+#             if not mm.IsEffective():
+#                 mm.mdelete()
+#                 continue
+#             if not mm.get('data'):
+#                 continue
+#             mm.checkSync(timeout=self._timeout)
+#         self.deleteAllFk()
         
-    def deleteAllFk(self):
-        """删除所有的外键
-        """
-        key = '%s:%s_fk:'%(mclient._hostname,self._name)
-        _fklist = util.getallkeys(key, mclient.connection)
-        for fk in _fklist:
-            name = '%s_fk:%s'%(self._name,fk)
-            fkmm = MFKMode(name)
-            fkmm.mdelete()
+#     def deleteAllFk(self):
+#         """删除所有的外键
+#         """
+#         key = '%s:%s_fk:'%(mclient._hostname,self._name)
+#         _fklist = util.getallkeys(key, mclient.connection)
+#         for fk in _fklist:
+#             name = '%s_fk:%s'%(self._name,fk)
+#             fkmm = MFKMode(name)
+#             fkmm.mdelete()
         
     def new(self,data):
         """创建一个新的对象
         """
-        incrkey = self._incrkey
+        incrkey = self.incrkey
+        tablename = self._name
         if incrkey:
-            incrvalue = self.incr('_incrvalue', 1)
-            data[incrkey] = incrvalue - 1 
-            pk = data.get(self._pk)
+            result = util.InsertIntoDBAndReturnID(tablename, data)
+            data[incrkey] = result[0]
+            pk = data.get(self.pk)
             if pk is None:
                 raise PKValueError(data)
-            mm = MMode(self._name+':%s'%pk,self._pk,data=data)
-            setattr(mm,incrkey,pk)
+            mm = MMode(self._name+':%s'%pk,self.pk,data=data,fk=self._fk,timeout=self.timeout)
         else:
-            pk = data.get(self._pk)
-            mm = MMode(self._name+':%s'%pk,self._pk,data=data)
+            pk = data.get(self.pk)
+            result = util.InsertIntoDB(tablename, data)
+            if not result:
+                raise util.SQLError()
+            mm = MMode(self._name+':%s'%pk,self.pk,data=data,fk=self._fk,timeout=self.timeout)
+        mm.insert()
         if self._fk:
             fk = data.get(self._fk,0)
             name = '%s_fk:%s'%(self._name,fk)
@@ -317,7 +356,48 @@ class MAdmin(MemObject):
                 pklist = self.getAllPkByFk(fk)
             pklist.append(pk)
             fkmm.update('pklist', pklist)
-        setattr(mm,'_state',MMODE_STATE_NEW)
-        mm.insert()
         return mm
+    
+    def insert(self):
+        pass
+    
         
+if __name__=="__main__":
+    from dbpool import dbpool
+    from memclient import memcached_connect
+    from madminanager import MAdminManager
+    memcached_connect(["127.0.0.1:11211"])
+    aa = {"default":{'host':"localhost",'user':'root',
+        'passwd':'111',
+        'db':'legend',
+        'port':3306,
+        'charset':'utf8'},
+      "master":{'host':"localhost",'user':'root',
+        'passwd':'111',
+        'db':'test',
+        'port':3306,
+        'charset':'utf8'}
+      }
+    dbpool.initPool(aa)
+    
+    class router: 
+        def db_for_read(self, **kw):
+            return "master"
+        def db_for_write(self, **kw):
+            return "master"
+    
+    dbpool.bind_router(router)
+    
+    ma = MAdmin('tb_role_info','id',incrkey='id',fk="username")
+    mm = ma.getObj(19)
+    print ma.getAllPkByFk('lanjinmin')
+    MAdminManager().checkAdmins()
+    mm.update("username", "00000")
+    print "1111111111111111111"
+    print ma.getAllPkByFk('lanjinmin')
+    import gevent
+    
+    gevent.sleep(100)
+    
+    
+

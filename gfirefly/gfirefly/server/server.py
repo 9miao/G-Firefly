@@ -96,6 +96,9 @@ class FFServer:
             urls = memconfig.get('urls')
 #             hostname = str(memconfig.get('hostname'))
             memcached_connect(urls)
+            from gfirefly.dbentrust.util import M2DB_PORT,M2DB_HOST,ToDBAddress
+            ToDBAddress().setToDBHost(memconfig.get("pubhost",M2DB_HOST))
+            ToDBAddress().setToDBPort(memconfig.get("pubport",M2DB_PORT))
             
         if logpath:
             log.addObserver(loogoo(logpath))#日志处理
