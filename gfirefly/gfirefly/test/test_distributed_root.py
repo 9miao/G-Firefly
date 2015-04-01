@@ -4,6 +4,10 @@ Created on 2011-10-17
 
 @author: lan (www.9miao.com)
 '''
+import gc
+import objgraph
+### 强制进行垃圾回收
+
 from gfirefly.utils import  services
 from gfirefly.distributed.root import PBRoot,BilateralFactory
 from gtwisted.core import reactor
@@ -37,6 +41,15 @@ def printData2(data,data1):
     d = root.callChild("test_node",1,u'Root测试')
     return data
 
+def printMem():
+    ### 强制进行垃圾回收
+    print gc.collect()
+    print "###################MEM#####################"
+    print gc.garbage  
+    print "###########################################"
+    reactor.callLater(2, printMem)
+
 if __name__=='__main__':
     reactor.listenTCP(9090, BilateralFactory(root))
+    reactor.callLater(2, printMem)
     reactor.run()

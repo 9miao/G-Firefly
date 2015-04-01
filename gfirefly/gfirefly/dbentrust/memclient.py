@@ -4,6 +4,7 @@ Created on 2014-12-30
 memcached client
 @author: lan (www.9miao.com)
 '''
+import memcache
 MEMCS = {'python-memcached':"memcache",
         "python-ultramemcache":"ultramemcache",
         "default":"memcache"}

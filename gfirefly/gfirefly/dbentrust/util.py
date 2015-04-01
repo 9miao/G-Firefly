@@ -10,6 +10,31 @@ from MySQLdb.cursors import DictCursor
 from numbers import Number
 from gtwisted.utils import log
 import traceback
+from gfirefly.utils.singleton import Singleton
+
+M2DB_PORT = 5000
+M2DB_HOST = "127.0.0.1"
+SYNC_TYPE = 1
+
+class ToDBAddress:
+    
+    __metaclass__ = Singleton
+    
+    def __init__(self):
+        """
+        """
+        self.m2db_host = M2DB_HOST
+        self.m2db_port = M2DB_PORT
+        
+    def setToDBHost(self,host):
+        """
+        """
+        self.m2db_host = host
+        
+    def setToDBPort(self,port):
+        """
+        """
+        self.m2db_port = port
 
 class SQLError(Exception): 
     """
@@ -152,7 +177,7 @@ def InsertIntoDBAndReturnID(tablename,data):
     cursor.execute(sql)
     conn.commit()
     cursor.execute("SELECT LAST_INSERT_ID();")
-    result=cursor.fetchone()[0]
+    result=cursor.fetchall()[0]
     cursor.close()
     conn.close()
     return result
@@ -168,6 +193,11 @@ def InsertIntoDB(tablename,data):
     cursor.close()
     conn.close()
     return bool(count)
+
+def UpdateWithDictSQL(tablename,props,prere):
+    """
+    """
+    return forEachUpdateProps(tablename, props, prere)
 
 def UpdateWithDict(tablename,props,prere):
     """更新记录
@@ -192,7 +222,7 @@ def getAllPkByFkInDB(tablename,pkname,props):
     """根据所有的外键获取主键ID
     """
     props = FormatCondition(props)
-    sql = """Select `%s` from `%s` where %s"""%(pkname,tablename,props)
+    sql = """select `%s` from `%s` where %s;"""%(pkname,tablename,props)
     conn = dbpool.connection(write=False,tablename=tablename)
     cursor = conn.cursor()
     cursor.execute(sql)
@@ -205,7 +235,7 @@ def GetOneRecordInfo(tablename,props):
     '''获取单条数据的信息
     '''
     props = FormatCondition(props)
-    sql = """Select * from `%s` where %s"""%(tablename,props)
+    sql = """Select * from `%s` where %s;"""%(tablename,props)
     conn = dbpool.connection(write=False,tablename=tablename)
     cursor = conn.cursor(cursorclass = DictCursor)
     cursor.execute(sql)
@@ -229,6 +259,22 @@ def GetRecordList(tablename,pkname,pklist):
     cursor.close()
     conn.close()
     return result
+
+def excuteSQL(tablename,sql):
+    conn = dbpool.connection(write=True,tablename=tablename)
+    cursor = conn.cursor()
+    count = 0
+    try:
+        count = cursor.execute(sql)
+        conn.commit()
+    except Exception,e:
+        log.err(e,traceback.format_exc())
+        log.err(sql)
+    cursor.close()
+    conn.close()
+    if(count >= 1):
+        return True
+    return False
 
 def DBTest():
     sql = """SELECT * FROM tb_item WHERE characterId=1000001;"""

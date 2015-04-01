@@ -70,7 +70,7 @@ class MemObj(object):
         self._timestamp = 0
         self._cas = kw.get("cas",False)
         self._cache = kw.get("cache",True)
-        self._timeout = kw.get("cache",CACHE_TIMEOUT)
+        self._timeout = kw.get("timeout",CACHE_TIMEOUT)
         if self._cas:
             self.lock()
         
@@ -106,6 +106,7 @@ class MemObj(object):
         '''
         检测对象是否被锁定
         '''
+        print "lock"
         if not self.isLocked():
             key = self.produceKey('_lock')
             result = memclient.mclient.add(key,1,LOCK_TIMEOUT)
@@ -146,6 +147,7 @@ class MemObj(object):
         """
         value = object.__getattribute__(self,attr)
         if isinstance(value, MemFields):
+            print 'locked',self.isLocked()
             if self._cas and not self.isLocked():
                 for _ in xrange(10):
                     if not self.lock():
