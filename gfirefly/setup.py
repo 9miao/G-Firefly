@@ -27,7 +27,8 @@ setup(name='gfirefly',
 		  "DBUtils",
 		  "affinity",
 		  "python-memcached",
-		  "MySQL-python"
+		  "MySQL-python",
+                  "gevent-zeromq"
       ],
       entry_points="""
       # -*- Entry points: -*-
