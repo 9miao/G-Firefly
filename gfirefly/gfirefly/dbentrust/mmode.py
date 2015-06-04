@@ -87,7 +87,9 @@ class MMode(MemObject):
             new_name = '%s_fk:%s'%(tb_name,values)
             new_fkmm = MFKMode(new_name)
             new_pklist = new_fkmm.get('pklist')
-            if new_pklist and pk not in new_pklist:
+            if pk not in new_pklist:
+                if new_pklist is None:
+                    new_pklist=[]
                 new_pklist.append(pk)
                 new_fkmm.update('pklist', new_pklist)
         data.update({key:values})
@@ -111,7 +113,9 @@ class MMode(MemObject):
             new_name = '%s_fk:%s'%(tb_name,values)
             new_fkmm = MFKMode(new_name)
             new_pklist = new_fkmm.get('pklist')
-            if new_pklist and pk not in new_pklist:
+            if pk not in new_pklist:
+                if new_pklist is None:
+                    new_pklist = []
                 new_pklist.append(pk)
                 new_fkmm.update('pklist', new_pklist)
         data.update(mapping)
@@ -289,16 +293,16 @@ class MAdmin(object):
         '''
         mm = self.getObj(pk)
         if mm:
-            if self._fk:
-                data = mm.get('data')
-                if data:
-                    fk = data.get(self._fk,0)
-                    name = '%s_fk:%s'%(self._name,fk)
-                    fkmm = MFKMode(name)
-                    pklist = fkmm.get('pklist')
-                    if pklist and pk in pklist:
-                        pklist.remove(pk)
-                    fkmm.update('pklist', pklist)
+#             if self._fk:
+#                 data = mm.get('data')
+#                 if data:
+#                     fk = data.get(self._fk,0)
+#                     name = '%s_fk:%s'%(self._name,fk)
+#                     fkmm = MFKMode(name)
+#                     pklist = fkmm.get('pklist')
+#                     if pklist and pk in pklist:
+#                         pklist.remove(pk)
+#                     fkmm.update('pklist', pklist)
             mm.delete()
         return True
     
