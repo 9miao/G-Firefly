@@ -79,14 +79,20 @@ class MMode(MemObject):
         old_name = '%s_fk:%s'%(tb_name,old_fk_value)
         old_fkmm = MFKMode(old_name)
         old_pklist = old_fkmm.get('pklist')
+        if old_pklist is None:#如果外键列表没有生成,则重新生成
+            props = {self._fk:old_fk_value}
+            old_pklist = util.getAllPkByFkInDB(tb_name, self._pk, props)
         if old_pklist and pk in old_pklist:#清理原有的外键
             old_pklist.remove(pk)
             old_fkmm.update('pklist', old_pklist)
+        if fk_value is None:
+            return
         new_name = '%s_fk:%s'%(tb_name,fk_value)
         new_fkmm = MFKMode(new_name)
         new_pklist = new_fkmm.get('pklist')
         if new_pklist is None:
-            new_pklist=[]
+            props = {self._fk:fk_value}
+            new_pklist=util.getAllPkByFkInDB(tb_name,self._pk, props)
         if pk not in new_pklist:
             new_pklist.append(pk)
             new_fkmm.update('pklist', new_pklist)
@@ -141,14 +147,8 @@ class MMode(MemObject):
             data = self.getData()
             if data:
                 fk = data.get(self._fk,"")
-                tb_name = self._name.split(":")[0]
-                name = '%s_fk:%s'%(tb_name,fk)
-                fkmm = MFKMode(name)
-                pklist = fkmm.get('pklist')
                 pk = data.get(self._pk)
-                if pklist and pk in pklist:
-                    pklist.remove(pk)
-                    fkmm.update('pklist', pklist)
+                self._update_fk(pk, fk, None)
         self.mdelete()
     
     def IsEffective(self):
@@ -348,8 +348,7 @@ class MAdmin(object):
             name = '%s_fk:%s'%(self._name,fk)
             fkmm = MFKMode(name)
             pklist = fkmm.get('pklist')
-            if pklist is None:
-                pklist = self.getAllPkByFk(fk)
+            pklist = self.getAllPkByFk(fk)
             pklist.append(pk)
             fkmm.update('pklist', pklist)
         return mm
@@ -386,11 +385,13 @@ if __name__=="__main__":
     
     ma = MAdmin('tb_role_info','id',incrkey='id',fk="username")
     mm = ma.getObj(19)
+    mm.update("username", "llllll")
     print ma.getAllPkByFk('lanjinmin')
     MAdminManager().checkAdmins()
-    mm.update("username", "00000")
+    
     print "1111111111111111111"
     print ma.getAllPkByFk('lanjinmin')
+    print ma.getAllPkByFk('llllll')
     import gevent
     
     gevent.sleep(100)
