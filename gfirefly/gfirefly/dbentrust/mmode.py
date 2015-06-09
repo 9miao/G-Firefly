@@ -72,26 +72,31 @@ class MMode(MemObject):
         self._fk = fk
         self.data = data
         
+    def _update_fk(self,pk,old_fk_value,fk_value):
+        """
+        """
+        tb_name = self._name.split(":")[0]
+        old_name = '%s_fk:%s'%(tb_name,old_fk_value)
+        old_fkmm = MFKMode(old_name)
+        old_pklist = old_fkmm.get('pklist')
+        if old_pklist and pk in old_pklist:#清理原有的外键
+            old_pklist.remove(pk)
+            old_fkmm.update('pklist', old_pklist)
+        new_name = '%s_fk:%s'%(tb_name,fk_value)
+        new_fkmm = MFKMode(new_name)
+        new_pklist = new_fkmm.get('pklist')
+        if new_pklist is None:
+            new_pklist=[]
+        if pk not in new_pklist:
+            new_pklist.append(pk)
+            new_fkmm.update('pklist', new_pklist)
+        
     def update(self, key, values):
         data = self.getData()
-        if self._fk and self._fk==key:
+        if self._fk and self._fk==key:#判断外键是否更新
             fk = data.get(self._fk,"")
-            tb_name = self._name.split(":")[0]
-            old_name = '%s_fk:%s'%(tb_name,fk)
             pk = data.get(self._pk)
-            old_fkmm = MFKMode(old_name)
-            old_pklist = old_fkmm.get('pklist')
-            if old_pklist and pk in old_pklist:
-                old_pklist.remove(pk)
-                old_fkmm.update('pklist', old_pklist)
-            new_name = '%s_fk:%s'%(tb_name,values)
-            new_fkmm = MFKMode(new_name)
-            new_pklist = new_fkmm.get('pklist')
-            if pk not in new_pklist:
-                if new_pklist is None:
-                    new_pklist=[]
-                new_pklist.append(pk)
-                new_fkmm.update('pklist', new_pklist)
+            self._update_fk(pk, fk, values)#更新外键
         data.update({key:values})
         result = MemObject.update(self, 'data',data)
         self.syncDB()
@@ -99,25 +104,12 @@ class MMode(MemObject):
     
     def update_multi(self, mapping):
         data = self.getData()
-        if self._fk and self._fk in mapping.keys():
+        if self._fk and self._fk in mapping.keys():#查看外键是否在更新的map中
             fk = data.get(self._fk,"")
-            tb_name = self._name.split(":")[0]
-            old_name = '%s_fk:%s'%(tb_name,fk)
-            pk = data.get(self._pk)
-            old_fkmm = MFKMode(old_name)
-            old_pklist = old_fkmm.get('pklist')
-            if old_pklist and pk in old_pklist:
-                old_pklist.remove(pk)
-                old_fkmm.update('pklist', old_pklist)
-            values = mapping.get(self._fk,"")
-            new_name = '%s_fk:%s'%(tb_name,values)
-            new_fkmm = MFKMode(new_name)
-            new_pklist = new_fkmm.get('pklist')
-            if pk not in new_pklist:
-                if new_pklist is None:
-                    new_pklist = []
-                new_pklist.append(pk)
-                new_fkmm.update('pklist', new_pklist)
+            new_fk = mapping.get(self._fk,fk)
+            if new_fk!=fk:#查看外键的值是否发生了变化
+                pk = data.get(self._pk)
+                self._update_fk(pk, fk, new_fk)#更新外键
         data.update(mapping)
         result = MemObject.update(self, 'data',data)
         self.syncDB()
@@ -253,7 +245,7 @@ class MAdmin(object):
         if not mm.IsEffective():
             return None
         data = mm.get('data')
-        if mm.get('data'):
+        if data:
             return data
         props = {self.pk:pk}
         record = util.GetOneRecordInfo(self._name,props)
